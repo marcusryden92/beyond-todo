@@ -59,22 +59,14 @@ app.listen(port, () => console.log(`Listening on port ${port}....`));
 // USER AUTHENTICATION LOGIC
 // *************************
 
-
-
-const addNewUser = (req, res,) => {
-
-// get the user from the req
-// ask for that name in database ? respond with error : add to table
-
-
-
-// const numberofUsers = SELECT COUNT(*) FROM user_id;
-// const user_id = numberofUsers + 1;
-// const user_name = req.name
-// const user_password =
-
+const addNewUser = (req, res) => {
+  // get the user from the req
+  // ask for that name in database ? respond with error : add to table
+  // const numberofUsers = SELECT COUNT(*) FROM user_id;
+  // const user_id = numberofUsers + 1;
+  // const user_name = req.name
+  // const user_password =
 };
-
 
 app.post("/todo", addNewUser);
 app.get("/todo", handleGet);
@@ -85,3 +77,52 @@ app.delete("/todo", handleDelete);
 // user_id user_name password
 
 // If authorized hash the password and pass it to database.
+
+// var passport = require("passport");
+// var LocalStrategy = require("passport-local");
+
+// passport.use(
+//   new LocalStrategy(function verify(user_name, password, cb) {
+//     pool.query(
+//       "SELECT * FROM users WHERE user_name = ?",
+//       [user_name],
+//       function (err, user) {
+//         if (err) {
+//           return cb(err);
+//         }
+//         if (!user) {
+//           return cb(null, false, {
+//             message: "Incorrect username or password.",
+//           });
+//         }
+
+//         crypto.pbkdf2(
+//           password,
+//           user.salt,
+//           310000,
+//           32,
+//           "sha256",
+//           function (err, hashedPassword) {
+//             if (err) {
+//               return cb(err);
+//             }
+//             if (!crypto.timingSafeEqual(user.hashed_password, hashedPassword)) {
+//               return cb(null, false, {
+//                 message: "Incorrect username or password.",
+//               });
+//             }
+//             return cb(null, user);
+//           }
+//         );
+//       }
+//     );
+//   })
+// );
+
+// app.post(
+//   "/login/password",
+//   passport.authenticate("local", {
+//     successRedirect: "/",
+//     failureRedirect: "/login",
+//   })
+// );
