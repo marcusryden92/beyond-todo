@@ -2,6 +2,33 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export default function Login() {
+
+
+    async function createUser() {
+
+      
+    const userData = {
+      user_name: input.current,
+      user_id: 2,
+      password: input.current,
+    };
+
+    try {
+      const response = await fetch("http://localhost:3000/todos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+      const json = await response.json();
+      console.log("Data updated successfully:", json);
+    } catch (err) {
+      console.error("Error updating data:", err);
+    }
+  }
+
+
   return (
     <div>
       <Link to="/mainpage">

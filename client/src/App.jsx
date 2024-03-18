@@ -9,7 +9,7 @@ export default function App() {
 
   async function getData() {
     try {
-      const response = await fetch("http://localhost:3000/todos");
+      const response = await fetch("http://localhost:3000/tomato/add");
       const json = await response.json();
       const data = JSON.stringify(json);
       setData(data);
@@ -18,11 +18,10 @@ export default function App() {
     }
   }
 
-
-
   useEffect(() => {
     getData();
   }, []);
+
   async function createTask() {
     const updatedData = {
       task_id: 5,
@@ -44,8 +43,9 @@ export default function App() {
       console.error("Error updating data:", err);
     }
   }
-  
-// if data null - what happens then
+
+
+  // if data null - what happens then
 
   return (
     <BrowserRouter>
