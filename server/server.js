@@ -23,8 +23,8 @@ async function createTask(task_id, user_id, text) {
   );
   return result;
 }
-// you can separate the code even more 
-// Id can be a string - think security 
+// you can separate the code even more
+// Id can be a string - think security
 // JOI - library
 // Create a new task
 // separate things into functions - scopes book - hoisting
@@ -54,3 +54,34 @@ app.listen(port, () => console.log(`Listening on port ${port}....`));
 // Authentication
 // Create a new user
 // Check if user is valid
+
+// *************************
+// USER AUTHENTICATION LOGIC
+// *************************
+
+
+
+const addNewUser = (req, res,) => {
+
+// get the user from the req
+// ask for that name in database ? respond with error : add to table
+
+
+
+// const numberofUsers = SELECT COUNT(*) FROM user_id;
+// const user_id = numberofUsers + 1;
+// const user_name = req.name
+// const user_password =
+
+};
+
+
+app.post("/todo", addNewUser);
+app.get("/todo", handleGet);
+app.put("/todo", handlePut);
+app.delete("/todo", handleDelete);
+
+// const function POST that creates new user (if not allready used username) {
+// user_id user_name password
+
+// If authorized hash the password and pass it to database.
