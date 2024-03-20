@@ -7,20 +7,20 @@ import Main from "./pages/Main";
 export default function App() {
   const [data, setData] = useState(null);
 
-  async function getData() {
+ /*  async function getData() {
     try {
-      const response = await fetch("http://localhost:3000/tomato/add");
+      const response = await fetch("http://localhost:3000/todos");
       const json = await response.json();
       const data = JSON.stringify(json);
       setData(data);
     } catch (err) {
       console.error(err);
     }
-  }
+  } */
 
-  useEffect(() => {
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   getData();
+  // }, []);
 
   async function createTask() {
     const updatedData = {

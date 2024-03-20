@@ -1,122 +1,130 @@
-const pool = require("./db");
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
 
-// Passport setup
-passport.use(
-  new LocalStrategy(function verify(username, password, callback) {
-    pool
-      .query("SELECT * FROM users WHERE username = $1", [username])
-      .then((user) => {
-        // If no user is found, return error
-        if (!user) {
-          return callback(null, false);
-        }
+// Import required modules
+const express = require("express"); // This line imports Express.js, a framework for building web applications.
+const cors = require("cors"); // This line imports middleware for enabling Cross-Origin Resource Sharing (CORS).
+const bodyParser = require("body-parser"); // This line imports middleware for parsing JSON request bodies.
+const session = require("express-session"); // This line imports middleware for managing user sessions.
+const passport = require("passport"); // This line imports middleware for authentication.
 
-        // TODO: INSERT PASSWORD CHECK HERE
+const LocalStrategy = require("passport-local").Strategy; // This line imports the local authentication strategy for Passport.js.
+const bcrypt = require("bcrypt"); // This line imports a library for securely hashing passwords.
 
-        if (user.name != user) {
-          return callback(null, false);
-        }
+// TODO: import handlers
+const { addUser, findUser, findUserByUsername } = require("./fakeDatabase"); // This line imports functions for interacting with a fake database.
 
-        // If everything is correct, return user
-        callback(null, { user_id: user_id });
-      })
-      .catch((err) => {
-        // If there's an error, return it
-        callback(err, null);
-      });
+const app = express(); // This line creates an instance of the Express application.
+const PORT = 8080; // This line sets the port number on which the server will run.
+
+// Middleware setup
+
+// TODO - CHECK THIS PART
+// This line configures Cross-Origin Resource Sharing (CORS) middleware to allow requests from a specific origin.
+app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+
+// This line configures middleware for parsing JSON request bodies.
+app.use(bodyParser.json());
+
+// This line configures middleware for managing user sessions, such as setting session cookies.
+app.use(
+  session({
+    // This is a secret key used to sign the session ID cookie.
+    secret: "secret",
+
+    // This option prevents saving the session on every request.
+    resave: false,
+
+    // This option prevents saving uninitialized sessions.
+    saveUninitialized: false,
+
+    // This configures session cookies, allowing them to be sent over non-HTTPS connections. WHEN DEPLOYED CHANGE TO TRUE
+    cookie: { secure: false, sameSite: "none" },
   })
 );
 
-//======================================================
+// This line initializes Passport authentication middleware.
+app.use(passport.initialize());
+// This line configures Passport to use sessions for authentication.
+app.use(passport.session());
 
-const app = express();
-
-app.get("/user", (req, res) => {
-  res.status(200).json({ user_id: 1 });
+// Passport setup
+// This block configures a local authentication strategy for Passport, which involves verifying user credentials.
+passport.use(
+  new LocalStrategy(async (username, password, done) => {
+    // This line finds a user in the fake database by username.
+    const user = await findUserByUsername(username); 
+    if (!user) {
+      return done(null, false, { message: "No user exists" }); // This line returns an error if the user does not exist.
+    }
+    const matchedPassword = await bcrypt.compare(password, user.password); // This line compares the provided password with the hashed password stored in the database.
+    if (!matchedPassword) {
+      return done(null, false, { message: "Wrong password" }); // This line returns an error if the password is incorrect.
+    }
+    return done(null, user); // This line indicates successful authentication.
+  })
+);
+// This line serializes the user object to store in the session.
+passport.serializeUser((user, done) => {
+  done(null, user.username); // This line stores the username in the session.
+});
+// This line deserializes the user object from the session.
+passport.deserializeUser(async (username, done) => {
+  const user = await findUserByUsername(username); // This line finds the user by username in the fake database.
+  done(null, user); // This line returns the user object.
 });
 
-//======================================================
 
-const response = await fetch("/login", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({ username: "user", password: "password" }),
+// Routes setup
+// This block defines routes for handling user registration, login, profile retrieval, session status check, and logout.
+// Handles user registration by extracting username and password from the request body, hashing the password, and adding the user to the fake database.
+app.post("/register", async (req, res) => {
+  //
+  console.log(req.body);
+
+  const { username, password } = req.body;
+  if (findUser(username)) {
+    console.log("user already exist");
+    return res.status(500).json("User already exists.");
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+  const user = { username, password: hash };
+  addUser(user); // SEND DOWN USERNAME AND HASHED PASSWORD TO DATABASE (SQL)
+
+  res.status(201).json("User registered successfully.");
 });
 
-const body = await response.json();
-Router("/dash");
 
-// const function POST that creates new user (if not allready used username) {
-// user_id user_name password
 
-// If authorized hash the password and pass it to database.
+// Handles user login by authenticating the user using Passport local authentication strategy.
+app.post("/login", passport.authenticate("local"), (req, res) => {
+  console.log("Successful login for: " + req.user.username);
+  res.json("Welcome " + req.user.username);
+});
 
-// var passport = require("passport");
-// var LocalStrategy = require("passport-local");
 
-// passport.use(
-//   new LocalStrategy(function verify(user_name, password, cb) {
-//     pool.query(
-//       "SELECT * FROM users WHERE user_name = ?",
-//       [user_name],
-//       function (err, user) {
-//         if (err) {
-//           return cb(err);
-//         }
-//         if (!user) {
-//           return cb(null, false, {
-//             message: "Incorrect username or password.",
-//           });
-//         }
 
-//         crypto.pbkdf2(
-//           password,
-//           user.salt,
-//           310000,
-//           32,
-//           "sha256",
-//           function (err, hashedPassword) {
-//             if (err) {
-//               return cb(err);
-//             }
-//             if (!crypto.timingSafeEqual(user.hashed_password, hashedPassword)) {
-//               return cb(null, false, {
-//                 message: "Incorrect username or password.",
-//               });
-//             }
-//             return cb(null, user);
-//           }
-//         );
-//       }
-//     );
-//   })
-// );
+// Retrieves user profile information if the user is authenticated.
+app.get("/profile", (req, res) => {
+  if (req.isAuthenticated()) {
+    console.log(req.user);
+    res.json(req.user);
+  } else {
+    res.status(401).json("Unauthorized");
+  }
+});
 
-// app.post(
-//   "/login/password",
-//   passport.authenticate("local", {
-//     successRedirect: "/",
-//     failureRedirect: "/login",
-//   })
-// );
 
-// Authentication
-// Create a new user
-// Check if user is valid
 
-// *************************
-// USER AUTHENTICATION LOGIC
-// *************************
-
-// const addNewUser = (req, res) => {
-//   get the user from the req
-//   ask for that name in database ? respond with error : add to table
-//   const numberofUsers = SELECT COUNT(*) FROM user_id;
-//   const user_id = numberofUsers + 1;
-//   const user_name = req.name
-//   const user_password =
-// };
+// Checks session status to determine if the user is authenticated.
+app.get("/session", (req, res) => {
+  // Code for checking session status...
+});
+// Handles user logout by logging out the user and ending the session.
+app.get("/logout", (req, res) => {
+  // Code for user logout...
+});
+// Starts the server and listens on the specified port.
+app.listen(PORT, () => {
+  console.log("Server running on port:" + PORT); // This line logs a message indicating that the server is running.
+});
