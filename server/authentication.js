@@ -2,21 +2,21 @@ const pool = require("./db");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
-// Passport middleware setup
+// Passport setup
 passport.use(
   new LocalStrategy(function verify(username, password, callback) {
     pool
       .query("SELECT * FROM users WHERE username = $1", [username])
       .then((user) => {
-
         // If no user is found, return error
         if (!user) {
-          return callback(null, false, { message: "No user found" });
+          return callback(null, false);
         }
 
-        // If username doesn't match, return error
+        // TODO: INSERT PASSWORD CHECK HERE
+
         if (user.name != user) {
-          return callback(null, false, { message: "Incorrect username" });
+          return callback(null, false);
         }
 
         // If everything is correct, return user
@@ -29,12 +29,9 @@ passport.use(
   })
 );
 
-
 //======================================================
 
 const app = express();
-
-app.post("/login", passport.authenticate("local"));
 
 app.get("/user", (req, res) => {
   res.status(200).json({ user_id: 1 });
@@ -52,15 +49,6 @@ const response = await fetch("/login", {
 
 const body = await response.json();
 Router("/dash");
-
-
-
-
-
-
-
-
-
 
 // const function POST that creates new user (if not allready used username) {
 // user_id user_name password
