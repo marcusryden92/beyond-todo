@@ -11,7 +11,6 @@ function createTask(task_id, user_id, text) {
   };
 }
 
-
 // function getTasks() {
 //   return async (_, res) => {
 //     try {
@@ -24,17 +23,19 @@ function createTask(task_id, user_id, text) {
 // }
 
 const getTasks = async (_, res) => {
-    try {
-      const tasks = await pool.query("SELECT * FROM tasks");
-      res.json(tasks.rows);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  try {
+    const tasks = await pool.query("SELECT * FROM tasks");
+    res.json(tasks.rows);
+    // const response = "Jesus";
+    // res.json(response);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 // app.post("/todos", async(req, res), () => {
 //   const { task_id, user_id, text } = req.body;
 //   createTask(task_id, user_id, text);
 // });
 
-module.exports = {getTasks, createTask};
+module.exports = { getTasks, createTask };

@@ -9,10 +9,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-
 const port = process.env.PORT || 3000;
+
+setupRouting(app, createTask, getTasks);
+
 app.listen(port, () => console.log(`Listening on port ${port}....`));
-
-setupRouting(createTask, getTasks);
-
-
