@@ -42,7 +42,7 @@ app.use(bodyParser.json());
 
 app.use(
   session({
-    secret: "SECRET",
+    secret: "secret",
     resave: false,
 
     saveUninitialized: true,
