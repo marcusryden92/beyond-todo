@@ -8,8 +8,8 @@ export default function Login() {
 
   async function createUser() {
     const userData = {
-      newUsername: username.current.value,
-      newPassword: password.current.value,
+      username: username.current.value,
+      password: password.current.value,
     };
 
     try {

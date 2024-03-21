@@ -22,17 +22,37 @@ const LocalStrategy = require("passport-local").Strategy;
 //Hashing & Encrypting
 const bcrypt = require("bcrypt");
 
+// Generate random userId: --ADDED BY MARCUS
+const { v4: uuidv4 } = require("uuid");
+
 // Middlewears
 app.use(cors({ credentials: true, origin: "http://localhost:5173" })); //CHECK IF NEEDED WHEN DEPLOYED
 app.use(bodyParser.json());
 
 // Setting up & initializing session and initializing passport
+
+// *****************
+// *****************
+//
+// MARCUS:  Changed "saveUninitialized" to true because of tutorial.
+//          Set maxAge of cookie to 1 day (the math equates to nr of ms in a day.)
+//
+// *****************
+// *****************
+
 app.use(
   session({
-    secret: "secret",
+    secret: "SECRET",
     resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false, sameSite: "none" }, //never do this in prod, however localhost has no https
+
+    saveUninitialized: true,
+
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24,
+
+      secure: false,
+      sameSite: "none",
+    }, //never do this in prod, however localhost has no https
   })
 );
 
@@ -40,21 +60,42 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Setting upp passport
-passport.use(
-  new LocalStrategy(async (user_name, password, callback) => {
-    //
-    const user = await findUserByUsername(user_name);
-    if (!user) {
-      return callback(null, false, { message: "No user exists" });
-    }
 
-    const matchedPassword = await bcrypt.compare(password, user.password);
-    if (!matchedPassword) {
-      return callback(null, false, { message: "Wrong password" });
-    }
-    return callback(null, user);
-  })
-);
+// *****************
+// *****************
+//
+// MARCUS:  Changed variable "user_name" to "username", because according to tutorial,
+//          Passport looks for the "username" variable in our HTTP request when doing
+//          authentication stuff. Also changed this in the Client-side createUser function
+//          and in the register function below, although it probably doesn't matter.
+//          Have not touched the database.
+//
+//          I have also separated the functions a little bit to make them more comprehensible,
+//          but functionality remains the same.
+//
+// *****************
+// *****************
+
+async function verificationCallback(username, password, callback) {
+  //
+  //
+  const user = await findUserByUsername(username);
+
+  if (!user) {
+    return callback(null, false, { message: "No user exists" });
+  }
+
+  const matchedPassword = await bcrypt.compare(password, user.password);
+
+  if (!matchedPassword) {
+    return callback(null, false, { message: "Wrong password" });
+  }
+  return callback(null, user);
+}
+
+const strategy = new LocalStrategy(verificationCallback);
+
+passport.use(strategy);
 
 // Hexdecimal things
 passport.serializeUser((user, callback) => {
@@ -72,16 +113,19 @@ app.post("/register", async (req, res) => {
   //
   console.log("hello");
 
-  const { newUsername, newPassword } = req.body;
+  const { username, password } = req.body;
 
-  if (await findUserByUsername(newUsername)) {
+  if (await findUserByUsername(username)) {
     console.log("user already exist");
     return res.status(409).json("User already exists.");
   }
 
   const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(newPassword, salt);
-  const user = { user_id: "2", newUsername, hashedPassword };
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  const user_id = uuidv4(); // --ADDED BY MARCUS
+
+  const user = { user_id: user_id, user_name: username, hashedPassword };
   addUser(user);
 
   res.status(201).json("User registered successfully.");
