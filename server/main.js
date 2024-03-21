@@ -34,8 +34,7 @@ app.use(bodyParser.json());
 // *****************
 // *****************
 //
-// MARCUS:  Changed "saveUninitialized" to true because of tutorial.
-//          Set maxAge of cookie to 1 day (the math equates to nr of ms in a day.)
+// MARCUS: Set maxAge of cookie to 1 day (the math equates to nr of ms in a day.)
 //
 // *****************
 // *****************

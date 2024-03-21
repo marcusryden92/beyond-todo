@@ -2,7 +2,6 @@
 
 1.  Made modifications in the Session config:
 
-    - Changed "saveUninitialized" to true because of tutorial.
     - Set maxAge of cookie to 1 day (the math equates to nr of ms in a day.)
 
 2.  Refactored the LocalStrategy setup to make it easier to understand.
