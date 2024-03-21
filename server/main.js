@@ -56,6 +56,14 @@ app.use(
   })
 );
 
+// MARCUS logging function.
+
+app.use((req, res, next) => {
+  console.log(req.session);
+  console.log(req.user);
+  next();
+});
+
 app.use(passport.initialize());
 app.use(passport.session());
 

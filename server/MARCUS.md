@@ -20,4 +20,14 @@
     - Required the package with "const { v4: uuidv4 } = require("uuid");"
     - Added "const user_id = uuidv4();" to the registration function.
 
-5.
+5.  Added session logging function.
+
+# TODO
+
+- Potentially add
+
+  { failureRedirect: '/login-failure', successRedirect: '/login-success'}
+
+  to the
+
+  app.post('/login')
