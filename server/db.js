@@ -10,3 +10,34 @@ const pool = new Pool({
 });
 
 module.exports = pool;
+
+// Create User
+const createUser = `
+INSERT INTO users (user_id, user_name, password)
+VALUES ($1, $2, $3, $4)
+`;
+
+
+const findUserByUserName = `
+SELECT * FROM users WHERE user_id = $()
+`;
+
+// Create Task
+const createTask = `
+INSERT INTO tasks (task_id, user_id, text) 
+VALUES ($1, $2, $3)
+`;
+
+// Edit Task
+const editTask = `
+UPDATE task
+SET task = ($1)
+WHERE task_id = ($1)
+`;
+
+// Remove task
+const removeTask = `
+UPDATE task
+SET task_completed = 1
+WHERE task_id = ($1)
+`;
