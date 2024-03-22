@@ -140,8 +140,8 @@ app.post("/register", async (req, res) => {
 
 // Login path + Authenticating a user
 app.post("/login", passport.authenticate("local"), (req, res) => {
-  console.log("Successful login for: " + req.user.username);
-  res.json("Welcome " + req.user.username);
+  console.log("Successful login for: " + req.user.user_name);
+  res.json("Welcome " + req.user.user_name);
 });
 
 // Getting Session
