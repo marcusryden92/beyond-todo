@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function LoginComponent() {
   return (
-    <div className="toLogin">
+    <>
       <Link to="/mainpage">
         <button className="bg-blue-200 border-2 border-black">
           Go to mainpage
@@ -57,6 +57,6 @@ export default function LoginComponent() {
           </Link>
         </p>
       </form>
-    </div>
+    </>
   );
 }
