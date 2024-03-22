@@ -55,11 +55,11 @@ async function findUserByUsername(user_name) {
 // Creates a new user 
 async function addUser(user) {
 	try {
-		const { user_id, newUsername, hashedPassword } = user;
+		const { user_id, username, hashedPassword } = user;
 		const result = await pool.query(
 			`INSERT INTO users (user_id, user_name, password) 
           VALUES ($1, $2, $3)`,
-			[user_id, newUsername, hashedPassword]
+			[user_id, username, hashedPassword]
 		);
 		return user;
 	} catch (error) {

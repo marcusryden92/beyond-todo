@@ -3,12 +3,7 @@ const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 3000;
 
-const {
-  createTask,
-  readTasks,
-  findUserByUsername,
-  addUser,
-} = require("./handlers"); // Importing handlers
+const { createTask, readTasks, findUserByUsername, addUser } = require("./handlers"); // Importing handlers
 const { setupRouting } = require("./express");
 const pool = require("./db");
 
@@ -40,27 +35,27 @@ app.use(bodyParser.json());
 // *****************
 
 app.use(
-  session({
-    secret: "secret",
-    resave: false,
+	session({
+		secret: "secret",
+		resave: false,
 
-    saveUninitialized: false,
+		saveUninitialized: false,
 
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24,
+		cookie: {
+			maxAge: 1000 * 60 * 60 * 24,
 
-      secure: false,
-      sameSite: "none",
-    }, //never do this in prod, however localhost has no https
-  })
+			secure: false,
+			sameSite: "none",
+		}, //never do this in prod, however localhost has no https
+	})
 );
 
 // MARCUS logging function.
 
 app.use((req, res, next) => {
-  console.log(req.session);
-  console.log(req.user);
-  next();
+	console.log(req.session);
+	console.log(req.user);
+	next();
 });
 
 app.use(passport.initialize());
@@ -84,73 +79,71 @@ app.use(passport.session());
 // *****************
 
 async function verificationCallback(username, password, callback) {
-  //
-  //
-  const user = await findUserByUsername(username);
+	//
+	//
+	const user = await findUserByUsername(username);
 
-  if (!user) {
-    return callback(null, false, { message: "No user exists" });
-  }
+	if (!user) {
+		return callback(null, false, { message: "No user exists" });
+	}
 
-  const matchedPassword = await bcrypt.compare(password, user.password);
+	const matchedPassword = await bcrypt.compare(password, user.password);
 
-  if (!matchedPassword) {
-    return callback(null, false, { message: "Wrong password" });
-  }
-  return callback(null, user);
+	if (!matchedPassword) {
+		return callback(null, false, { message: "Wrong password" });
+	}
+	return callback(null, user);
 }
 
 const strategy = new LocalStrategy(verificationCallback);
 
 passport.use(strategy);
 
-// Hexdecimal things
+// Hexadecimal things
 passport.serializeUser((user, callback) => {
-  callback(null, user.user_name);
+	callback(null, user.user_name);
 });
 
 passport.deserializeUser(async (username, callback) => {
-  const user = await findUserByUsername(username);
-  callback(null, user);
+	const user = await findUserByUsername(username);
+	callback(null, user);
 });
 
 // Register a new user
 
 app.post("/register", async (req, res) => {
-  //
-  console.log("hello");
+	const { username, password } = req.body;
 
-  const { username, password } = req.body;
+	if (await findUserByUsername(username)) {
+		console.log("user already exist");
+		return res.status(409).json("User already exists.");
+	}
 
-  if (await findUserByUsername(username)) {
-    console.log("user already exist");
-    return res.status(409).json("User already exists.");
-  }
+	const salt = await bcrypt.genSalt(10);
+	const hashedPassword = await bcrypt.hash(password, salt);
 
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+	const user_id = uuidv4(); // --ADDED BY MARCUS
 
-  const user_id = uuidv4(); // --ADDED BY MARCUS
+	const user = { user_id, username, hashedPassword };
+	console.log(user);
+	addUser(user);
 
-  const user = { user_id: user_id, user_name: username, hashedPassword };
-  addUser(user);
-
-  res.status(201).json("User registered successfully.");
+	res.status(201).json("User registered successfully.");
 });
 
 // Login path + Authenticating a user
 app.post("/login", passport.authenticate("local"), (req, res) => {
-  console.log("Successful login for: " + req.user.user_name);
-  res.json("Welcome " + req.user.user_name);
+	console.log("Successful login for: " + req.user.user_name);
+	res.json("Welcome " + req.user.user_name);
 });
 
 // Getting Session
 app.get("/session", (req, res) => {
-  if (req.isAuthenticated()) {
-    res.status(200).json("Authorized ");
-  } else {
-    res.status(401).json("Unauthorized");
-  }
+	if (req.isAuthenticated()) {
+		res.status(200).json("Authorized ");
+	} else {
+		res.status(401).json("Unauthorized");
+	}
 });
 
 setupRouting(app, createTask, readTasks);
