@@ -29,7 +29,7 @@ function createTask(task_id, user_id, text) {
 // Returns an object of a task
 async function getTask(task_id) {
 	try {
-		const result = await pool.query("SELECT * FROM users WHERE task_id = $1", [task_id]);
+		const result = await pool.query("SELECT * FROM tasks WHERE task_id = $1", [task_id]);
 		return result.rows[0];
 	} catch (error) {
 		console.error("Error executing query in getTask:", error);
@@ -67,6 +67,8 @@ async function addUser(user) {
 		throw error; // Re-throw the error to be handled by the caller
 	}
 }
+
+
 
 
 

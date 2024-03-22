@@ -51,7 +51,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route index element={<Login />} />
-        <Route path="/mainpage" element={<Main />} />
+        <Route path="/main/:user" element={<Main />} />
       </Routes>
     </BrowserRouter>
   );

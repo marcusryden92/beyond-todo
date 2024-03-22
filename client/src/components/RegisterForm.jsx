@@ -10,7 +10,6 @@ export default function RegisterForm() {
 			username: registerUsername.current.value,
 			password: registerPassword.current.value,
 		};
-		console.log("hej");
 
 		try {
 			const response = await fetch("http://localhost:3000/register", {

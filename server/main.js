@@ -38,12 +38,9 @@ app.use(
 	session({
 		secret: "secret",
 		resave: false,
-
-		saveUninitialized: false,
-
+		saveUninitialized: true,
 		cookie: {
 			maxAge: 1000 * 60 * 60 * 24,
-
 			secure: false,
 			sameSite: "none",
 		}, //never do this in prod, however localhost has no https
@@ -79,24 +76,21 @@ app.use(passport.session());
 // *****************
 
 async function verificationCallback(username, password, callback) {
-	//
-	//
 	const user = await findUserByUsername(username);
+	const matchedPassword = await bcrypt.compare(password, user.password);
 
 	if (!user) {
 		return callback(null, false, { message: "No user exists" });
 	}
 
-	const matchedPassword = await bcrypt.compare(password, user.password);
-
 	if (!matchedPassword) {
 		return callback(null, false, { message: "Wrong password" });
 	}
+
 	return callback(null, user);
 }
 
 const strategy = new LocalStrategy(verificationCallback);
-
 passport.use(strategy);
 
 // Hexadecimal things
@@ -104,8 +98,8 @@ passport.serializeUser((user, callback) => {
 	callback(null, user.user_name);
 });
 
-passport.deserializeUser(async (username, callback) => {
-	const user = await findUserByUsername(username);
+passport.deserializeUser(async (user_name, callback) => {
+	const user = await findUserByUsername(user_name);
 	callback(null, user);
 });
 
@@ -134,6 +128,7 @@ app.post("/register", async (req, res) => {
 // Login path + Authenticating a user
 app.post("/login", passport.authenticate("local"), (req, res) => {
 	console.log("Successful login for: " + req.user.user_name);
+
 	res.json("Welcome " + req.user.user_name);
 });
 
@@ -145,6 +140,8 @@ app.get("/session", (req, res) => {
 		res.status(401).json("Unauthorized");
 	}
 });
+
+
 
 setupRouting(app, createTask, readTasks);
 
