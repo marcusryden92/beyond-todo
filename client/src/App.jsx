@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Main from "./pages/Main";
+import Signup from "./components/SignupComponent";
 
 export default function App() {
   const [data, setData] = useState(null);
 
- /*  async function getData() {
+  /*  async function getData() {
     try {
       const response = await fetch("http://localhost:3000/todos");
       const json = await response.json();
@@ -44,7 +45,6 @@ export default function App() {
     }
   }
 
-
   // if data null - what happens then
 
   return (
@@ -52,6 +52,7 @@ export default function App() {
       <Routes>
         <Route index element={<Login />} />
         <Route path="/mainpage" element={<Main />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </BrowserRouter>
   );
