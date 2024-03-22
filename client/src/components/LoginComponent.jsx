@@ -21,6 +21,7 @@ export default function LoginComponent() {
             placeholder="Enter your name"
             className="w-full px-4 py-2 mt-2 bg-gray-200 rounded-lg focus:ring-pink-500 focus:border-pink-500"
           />
+          git checkout
         </div>
         <div className="mb-4">
           <label htmlFor="password" className="block text-gray-700">
