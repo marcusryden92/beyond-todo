@@ -1,8 +1,10 @@
 import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 export default function Main() {
   const param = useParams();
   const username = param.user;
+  const [tasks, setTasks] = useState([]);
 
   // fetch the user from database
   async function getUser() {
@@ -15,30 +17,27 @@ export default function Main() {
         "Content-Type": "application/json",
       },
     });
-
     if (res.ok) {
-      const data = await res.json();
-      return data;
+      const tasks = await res.json();
+      setTasks(tasks);
     } else {
       console.error("HTTP error:", res.status);
     }
   }
 
-  // get all tasks connected to said user
+  useEffect(() => {
+    getUser();
+  }, []);
 
   return (
     <>
-      <h1>{username}</h1>
-      {/* Add a button to add a task */}
-      <ul>
-        <button
-          className="rounded-md bg-red-200 px-4 py-2 border"
-          onClick={() => getUser()}
-        >
-          REQ
-        </button>
-        {/* map through the list and display items */}
-        {/* here is a list-item component with a remove-button and edit-button */}
+      <h1 className="text-2xl font-bold text-center mb-4">{username}</h1>
+      <ul className="space-y-4">
+        {tasks.map((task, index) => (
+          <li key={index} className="border p-4 rounded shadow">
+            {task.task}
+          </li>
+        ))}
       </ul>
     </>
   );
