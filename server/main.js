@@ -14,8 +14,8 @@ const { setupRouting } = require("./express");
 const pool = require("./db");
 
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-app.use(cookieParser());
+// const cookieParser = require("cookie-parser");
+// app.use(cookieParser());
 
 // Login & Session
 const session = require("express-session");
@@ -42,7 +42,7 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60 * 24,
       secure: false,
-      sameSite: "none",
+      sameSite: "lax",
     }, //never do this in prod, however localhost has no https
   })
 );
@@ -81,8 +81,7 @@ passport.serializeUser((user, callback) => {
   callback(null, user);
 });
 
-passport.deserializeUser(async (username, callback) => {
-  const user = await findUserByUsername(username);
+passport.deserializeUser(async (user, callback) => {
   callback(null, user);
 });
 
@@ -125,7 +124,10 @@ app.get("/session", (req, res) => {
 
 // Getting User
 app.get("/tasks", async (req, res) => {
-  console.log("Cookies: ", req.cookies);
+  const user_id = req.user.user_id;
+  console.log("user ID from HEADER :" + user_id);
+  const tasks = await getTasks(user_id);
+  res.json(tasks);
 });
 
 setupRouting(app, createTask, readTasks);
