@@ -3,7 +3,7 @@ const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 3000;
 
-const { createTask, readTasks, findUserByUsername, addUser } = require("./handlers"); // Importing handlers
+const { createTask, readTasks, findUserByUsername, addUser, getTasks } = require("./handlers"); // Importing handlers
 const { setupRouting } = require("./express");
 const pool = require("./db");
 
@@ -25,15 +25,6 @@ app.use(cors({ credentials: true, origin: "http://localhost:5173" })); //CHECK I
 app.use(bodyParser.json());
 
 // Setting up & initializing session and initializing passport
-
-// *****************
-// *****************
-//
-// MARCUS: Set maxAge of cookie to 1 day (the math equates to nr of ms in a day.)
-//
-// *****************
-// *****************
-
 app.use(
 	session({
 		secret: "secret",
@@ -48,7 +39,6 @@ app.use(
 );
 
 // MARCUS logging function.
-
 app.use((req, res, next) => {
 	console.log(req.session);
 	console.log(req.user);
@@ -59,22 +49,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Setting upp passport
-
-// *****************
-// *****************
-//
-// MARCUS:  Changed variable "user_name" to "username", because according to tutorial,
-//          Passport looks for the "username" variable in our HTTP request when doing
-//          authentication stuff. Also changed this in the Client-side createUser function
-//          and in the register function below, although it probably doesn't matter.
-//          Have not touched the database.
-//
-//          I have also separated the functions a little bit to make them more comprehensible,
-//          but functionality remains the same.
-//
-// *****************
-// *****************
-
 async function verificationCallback(username, password, callback) {
 	const user = await findUserByUsername(username);
 	const matchedPassword = await bcrypt.compare(password, user.password);
@@ -95,16 +69,15 @@ passport.use(strategy);
 
 // Hexadecimal things
 passport.serializeUser((user, callback) => {
-	callback(null, user.user_name);
+	callback(null, user);
 });
 
-passport.deserializeUser(async (user_name, callback) => {
-	const user = await findUserByUsername(user_name);
+passport.deserializeUser(async (user, callback) => {
+	//const user = await findUserByUsername(user_name);
 	callback(null, user);
 });
 
 // Register a new user
-
 app.post("/register", async (req, res) => {
 	const { username, password } = req.body;
 
@@ -141,7 +114,12 @@ app.get("/session", (req, res) => {
 	}
 });
 
-
+// Getting User
+app.get("/tasks", async (req, res) => {
+	// res.status(200).json("worked");
+	// const { user_name } = req.cookies;
+	// console.log(user_name);
+});
 
 setupRouting(app, createTask, readTasks);
 
