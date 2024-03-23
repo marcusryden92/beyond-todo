@@ -6,7 +6,7 @@
 
 2.  Refactored the LocalStrategy setup to make it easier to understand.
 
-3.  Changed variable "user_name" to "username", because according to tutorial,
+3.  Changed variable "username" to "username", because according to tutorial,
     Passport looks for the "username" variable in our HTTP request when doing
     authentication stuff. Also changed this in the Client-side createUser function
     and in the register function, although it probably doesn't matter.

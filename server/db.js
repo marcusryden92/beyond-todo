@@ -13,10 +13,9 @@ module.exports = pool;
 
 // Create User
 const createUser = `
-INSERT INTO users (user_id, user_name, password)
+INSERT INTO users (user_id, username, password)
 VALUES ($1, $2, $3, $4)
 `;
-
 
 const findUserByUserName = `
 SELECT * FROM users WHERE user_id = $()
