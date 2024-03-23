@@ -38,6 +38,25 @@ async function getTask(task_id) {
 }
 
 
+// Returns all tasks from specific user
+async function getTasks(user_id) {
+	try {
+		const result = await pool.query("SELECT * FROM tasks WHERE user_id = $1", [user_id]);
+		return result.rows;
+	} catch (error) {
+		console.error("Error executing query in getTask:", error);
+		throw error;
+	}
+}
+
+// `
+// SELECT task.* 
+// FROM tasks 
+// INNER JOIN users ON tasks.user_id = users.user_id
+// WHERE users.user_id = $1;
+// ` 
+
+
 // *************************-USERS-**************************
 
 // Returns an object of the user row
@@ -77,4 +96,4 @@ async function addUser(user) {
 //   createTask(task_id, user_id, text);
 // });
 
-module.exports = { readTasks, createTask, findUserByUsername, addUser };
+module.exports = { readTasks, createTask, findUserByUsername, addUser, getTasks };
