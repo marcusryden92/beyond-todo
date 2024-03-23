@@ -123,6 +123,19 @@ app.get("/session", (req, res) => {
 });
 
 // Getting User
+app.post("/task", async (req, res) => {
+  const user_id = req.user.user_id;
+  const task = req.body.task;
+  createTask(user_id, task);
+  //   console.log("task from HEADER :" + task);
+  //   console.log("User_id from COOKIE :" + user_id);
+
+  createTask(user_id, task);
+  //   const tasks = await createTask(user_id, task);
+  //   res.json(tasks);
+});
+
+// Getting User
 app.get("/tasks", async (req, res) => {
   const user_id = req.user.user_id;
   console.log("user ID from HEADER :" + user_id);
@@ -130,6 +143,6 @@ app.get("/tasks", async (req, res) => {
   res.json(tasks);
 });
 
-setupRouting(app, createTask, readTasks);
+// setupRouting(app, createTask, readTasks);
 
 app.listen(port, () => console.log(`Listening on port ${port}....`));

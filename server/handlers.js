@@ -2,29 +2,7 @@ const pool = require("./db");
 
 // *************************-TASKS-**************************
 
-// Reads the whole table
-function readTasks() {
-  return async (_, res) => {
-    try {
-      const tasks = await pool.query("SELECT * FROM tasks");
-      res.json(tasks.rows);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-}
-
-// Creates a new task
-function createTask(task_id, user_id, text) {
-  return async (req, res) => {
-    const result = await pool.query(
-      `INSERT INTO tasks (task_id, user_id, text) VALUES (?, ?, ?)`,
-      [task_id, user_id, text]
-    );
-    return result;
-  };
-}
-
+// Get all the tasks for a user
 async function getTasks(user_id) {
   try {
     const result = await pool.query(
@@ -43,12 +21,18 @@ async function getTasks(user_id) {
   }
 }
 
-// `
-// SELECT task.*
-// FROM tasks
-// INNER JOIN users ON tasks.user_id = users.user_id
-// WHERE users.user_id = $1;
-// `
+async function createTask(user_id, task) {
+  try {
+    const result = await pool.query(
+      `INSERT INTO tasks (user_id, task) VALUES ($1, $2)`,
+      [user_id, task]
+    );
+    return result;
+  } catch (error) {
+    console.error("Error executing query in createTask:", error);
+    throw error;
+  }
+}
 
 // *************************-USERS-**************************
 
@@ -81,15 +65,10 @@ async function addUser(user) {
   }
 }
 
-// app.post("/todos", async(req, res), () => {
-//   const { task_id, user_id, text } = req.body;
-//   createTask(task_id, user_id, text);
-// });
-
 module.exports = {
-  readTasks,
-  createTask,
+  // createTask,
   findUserByUsername,
   addUser,
   getTasks,
+  createTask,
 };
