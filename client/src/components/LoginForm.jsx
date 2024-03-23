@@ -40,7 +40,7 @@ export default function LoginForm() {
     checkAuth();
   });
 
-  async function login(e) {
+  async function handleLogin(e) {
     e.preventDefault();
 
     const userData = {
@@ -67,28 +67,54 @@ export default function LoginForm() {
   }
 
   return (
-    <form className="bg-stone-500 flex flex-col gap-4 p-24">
-      <input
-        type="text"
-        placeholder="name"
-        ref={loginUsername}
-        className="border rounded-md max-w-[10rem] p-2"
-      ></input>
-      <input
-        type="text"
-        placeholder="password"
-        className="border rounded-md max-w-[10rem] p-2"
-        ref={loginPassword}
-      ></input>
-      <div className="flex flex-col gap-4">
+    <>
+      <form className="max-w-md mx-auto bg-white p-8 rounded-lg text-center shadow-lg">
+        <div className="mb-4">
+          <label htmlFor="name" className="block text-gray-700">
+            Name
+          </label>
+          <input
+            ref={loginUsername}
+            id="name"
+            type="text"
+            placeholder="Enter your name"
+            className="w-full px-4 py-2 mt-2 bg-gray-200 rounded-lg focus:ring-pink-500 focus:border-pink-500"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="password" className="block text-gray-700">
+            Password
+          </label>
+          <input
+            ref={loginPassword}
+            id="password"
+            type="password"
+            placeholder="Enter your password"
+            className="w-full px-4 py-2 mt-2 bg-gray-200 rounded-lg focus:ring-pink-500 focus:border-pink-500"
+          />
+        </div>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <input type="checkbox" id="rememberMe" className="mr-2" />
+            <label htmlFor="rememberMe" className="text-gray-700">
+              Remember me
+            </label>
+          </div>
+        </div>
         <button
+          onClick={(e) => {
+            handleLogin(e);
+          }}
           type="submit"
-          onClick={(e) => login(e)}
-          className="bg-pink-200 max-w-[5rem] rounded-md p-1 "
+          className="w-full py-2 mb-4 bg-pink-500 hover:bg-pink-400 text-white font-semibold rounded-lg shadow-lg"
         >
           Login
         </button>
-      </div>
-    </form>
+        {/* <p className="text-gray-700">
+          Not a member?
+          <div className="text-pink-500 hover:underline">Sign up</div>
+        </p> */}
+      </form>
+    </>
   );
 }
