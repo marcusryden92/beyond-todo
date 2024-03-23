@@ -16,7 +16,12 @@ export default function Main() {
       },
     });
 
-    return JSON.parse(res.body);
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    } else {
+      console.error("HTTP error:", res.status);
+    }
   }
 
   // get all tasks connected to said user

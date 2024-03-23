@@ -14,8 +14,8 @@ const { setupRouting } = require("./express");
 const pool = require("./db");
 
 const bodyParser = require("body-parser");
-// const cookieParser = require("cookie-parser");
-// app.use(cookieParser());
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 
 // Login & Session
 const session = require("express-session");
@@ -29,12 +29,13 @@ const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 
 // Middlewears
-app.use(cors({ credentials: true, origin: "http://localhost:5174" })); //CHECK IF NEEDED WHEN DEPLOYED
+app.use(cors({ credentials: true, origin: "http://localhost:5173" })); //CHECK IF NEEDED WHEN DEPLOYED
 app.use(bodyParser.json());
 
 // Setting up & initializing session and initializing passport
 app.use(
   session({
+    cookie: { secure: false },
     secret: "secret",
     resave: false,
     saveUninitialized: true,
@@ -123,9 +124,9 @@ app.get("/session", (req, res) => {
 });
 
 // Getting User
-// app.get("/tasks", async (req, res) => {
-//   console.log("Cookies: ", req.cookies);
-// });
+app.get("/tasks", async (req, res) => {
+  console.log("Cookies: ", req.cookies);
+});
 
 setupRouting(app, createTask, readTasks);
 

@@ -12,8 +12,6 @@ export default function LoginForm() {
     const url = "http://localhost:3000/session";
     const res = await fetch(url, {
       method: "GET",
-      withCredentials: true,
-      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
