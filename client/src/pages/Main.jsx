@@ -83,7 +83,7 @@ export default function Main() {
                 key={index}
                 className="flex justify-between items-center py-2 border-b border-gray-200"
               >
-                <span>{tasks}</span>
+                <span>{tasks.task}</span>
                 <div>
                   <button
                     onClick={() => editLocalTask(index)}
