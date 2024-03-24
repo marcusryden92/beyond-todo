@@ -33,7 +33,7 @@ export default function Main() {
         updatedTask[editIndex] = newTask;
         setEditIndex(null);
       } else {
-        setTasks([...tasks, newTask]);
+        setTasks((prevTasks) => [...prevTasks, newTask]);
       }
       taskInput.current.value = "";
     }
@@ -42,8 +42,11 @@ export default function Main() {
 
   function deleteLocalTask(index) {
     deleteTask(tasks[index]);
-    const updatedTasks = [...tasks];
-    updatedTasks.splice(index, 1);
+    setTasks((prevTasks) => {
+      const updatedTasks = [...prevTasks];
+      updatedTasks.splice(index, 1);
+      return updatedTasks;
+    });
 
     if (editIndex === index) {
       setEditIndex(null);
