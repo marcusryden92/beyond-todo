@@ -37,7 +37,7 @@ export default function Main() {
       }
       taskInput.current.value = "";
     }
-    fetchTasks();
+    setTimeout(fetchTasks, 200);
   }
 
   function deleteLocalTask(index) {
@@ -51,7 +51,7 @@ export default function Main() {
     if (editIndex === index) {
       setEditIndex(null);
     }
-    fetchTasks();
+    setTimeout(fetchTasks, 200);
   }
 
   function editLocalTask(index) {
