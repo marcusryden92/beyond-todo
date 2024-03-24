@@ -128,12 +128,6 @@ app.post("/task", async (req, res) => {
   const user_id = req.user.user_id;
   const task = req.body.task;
   createTask(user_id, task);
-  //   console.log("task from HEADER :" + task);
-  //   console.log("User_id from COOKIE :" + user_id);
-
-  createTask(user_id, task);
-  //   const tasks = await createTask(user_id, task);
-  //   res.json(tasks);
 });
 
 // Deleting a task

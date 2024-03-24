@@ -21,6 +21,7 @@ export default function Main() {
   async function fetchTasks() {
     const tasks = await getTasks();
     setTasks(tasks);
+    console.log(tasks);
   }
 
   function addLocalTask() {
