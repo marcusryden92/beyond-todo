@@ -14,6 +14,15 @@ export default function Main() {
   const [editIndex, setEditIndex] = useState(null);
   const taskInput = useRef();
 
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  async function fetchTasks() {
+    const tasks = await getTasks();
+    setTasks(tasks);
+  }
+
   function addLocalTask() {
     const newTask = taskInput.current.value.trim();
     addTask(newTask);
@@ -27,15 +36,18 @@ export default function Main() {
       }
       taskInput.current.value = "";
     }
+    fetchTasks();
   }
 
   function deleteLocalTask(index) {
+    deleteTask(tasks[index].user_id);
     const updatedTasks = [...tasks];
     updatedTasks.splice(index, 1);
 
     if (editIndex === index) {
       setEditIndex(null);
     }
+    fetchTasks();
   }
 
   function editLocalTask(index) {
@@ -47,14 +59,6 @@ export default function Main() {
     // Implement your logout logic here
     console.log("Logged out");
   }
-
-  useEffect(() => {
-    async function fetchTasks() {
-      const tasks = await getTasks();
-      setTasks(tasks);
-    }
-    fetchTasks();
-  }, []);
 
   return (
     <div className="max-w-md mx-auto bg-white text-black p-8 rounded-lg text-center shadow-lg">

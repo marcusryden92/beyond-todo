@@ -34,6 +34,19 @@ async function createTask(user_id, task) {
   }
 }
 
+async function deleteTask(task_id) {
+  try {
+    const result = await pool.query(
+      `UPDATE tasks SET task_completed = 1 WHERE task_id = $1`,
+      [task_id]
+    );
+    return result;
+  } catch (error) {
+    console.error("Error executing query in deleteTask:", error);
+    throw error;
+  }
+}
+
 // *************************-USERS-**************************
 
 // Returns an object of the user row
@@ -71,4 +84,5 @@ module.exports = {
   addUser,
   getTasks,
   createTask,
+  deleteTask,
 };

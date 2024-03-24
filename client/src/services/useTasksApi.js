@@ -21,6 +21,7 @@ export async function deleteTask(task) {
   const res = await fetch(url, {
     method: "PUT",
     withCredentials: true,
+    body: task,
     credentials: "include",
     headers: {
       "Content-Type": "application/json",

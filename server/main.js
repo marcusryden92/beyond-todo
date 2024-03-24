@@ -5,6 +5,7 @@ const port = process.env.PORT || 3000;
 
 const {
   createTask,
+  deleteTask,
   readTasks,
   findUserByUsername,
   addUser,
@@ -122,7 +123,7 @@ app.get("/session", (req, res) => {
   }
 });
 
-// Getting User
+// Creating a task
 app.post("/task", async (req, res) => {
   const user_id = req.user.user_id;
   const task = req.body.task;
@@ -133,6 +134,12 @@ app.post("/task", async (req, res) => {
   createTask(user_id, task);
   //   const tasks = await createTask(user_id, task);
   //   res.json(tasks);
+});
+
+// Deleting a task
+app.delete("/task", async (req, res) => {
+  const task_id = req.body;
+  deleteTask(task_id);
 });
 
 // Getting User
