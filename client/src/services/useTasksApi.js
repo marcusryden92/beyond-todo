@@ -18,10 +18,11 @@ export async function getTasks() {
 
 export async function deleteTask(task) {
   const url = "http://localhost:3000/task";
+  console.log(task);
   const res = await fetch(url, {
-    method: "PUT",
+    method: "DELETE",
     withCredentials: true,
-    body: task,
+    body: JSON.stringify(task),
     credentials: "include",
     headers: {
       "Content-Type": "application/json",

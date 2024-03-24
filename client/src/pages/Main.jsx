@@ -40,7 +40,7 @@ export default function Main() {
   }
 
   function deleteLocalTask(index) {
-    deleteTask(tasks[index].user_id);
+    deleteTask(tasks[index]);
     const updatedTasks = [...tasks];
     updatedTasks.splice(index, 1);
 
@@ -82,12 +82,12 @@ export default function Main() {
       </button>
       <ul className="text-left">
         {tasks
-          ? tasks.map((tasks, index) => (
+          ? tasks.map((task, index) => (
               <li
                 key={index}
                 className="flex justify-between items-center py-2 border-b border-gray-200"
               >
-                <span>{tasks.task}</span>
+                <span>{task.task}</span>
                 <div>
                   <button
                     onClick={() => editLocalTask(index)}

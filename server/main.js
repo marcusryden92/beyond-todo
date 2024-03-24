@@ -138,8 +138,19 @@ app.post("/task", async (req, res) => {
 
 // Deleting a task
 app.delete("/task", async (req, res) => {
-  const task_id = req.body;
-  deleteTask(task_id);
+  // Ensure req.body exists and has a task_id property
+  if (!req.body || !req.body.task_id) {
+    return res.status(400).send("Missing task_id in request body"); // Send 400 error if task_id is missing
+  }
+
+  const task_id = req.body.task_id; // Directly use task_id from req.body
+  try {
+    await deleteTask(task_id);
+    res.sendStatus(200); // Send success response
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    res.status(500).send("Internal Server Error"); // Send 500 error if deleteTask function fails
+  }
 });
 
 // Getting User
