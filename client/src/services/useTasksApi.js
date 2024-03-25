@@ -10,7 +10,6 @@ export async function getTasks(setTasks) {
   });
   if (res.ok) {
     const tasks = await res.json();
-
     setTasks(tasks);
     return;
   } else {

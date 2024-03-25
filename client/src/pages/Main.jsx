@@ -23,8 +23,11 @@ export default function Main() {
   }
 
   function addLocalTask() {
-    const newTask = taskInput.current.value.trim();
-    addTask(newTask, fetchTasks);
+    if (taskInput.current.value) {
+      const newTask = taskInput.current.value.trim();
+      addTask(newTask, fetchTasks);
+      taskInput.current.value = "";
+    }
   }
 
   function deleteLocalTask(index) {
