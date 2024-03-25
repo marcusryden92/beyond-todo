@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { handleLogin } from "../services/handleLogin";
 import { myContext } from "../context/Context";
@@ -12,7 +12,29 @@ export default function RegisterForm() {
 
   const { setStatus } = myContext();
 
+  const [displayError, setDisplayError] = useState("");
   const navigate = useNavigate();
+
+  function handleClickRegister(e) {
+    if (
+      validateCredentials(
+        e,
+        registerUsername.current.value,
+        registerPassword.current.value,
+        setDisplayError
+      )
+    ) {
+      e.preventDefault();
+      handleCreateUser(
+        e,
+        registerUsername.current.value,
+        registerPassword.current.value,
+        navigate,
+        handleLogin,
+        setStatus
+      );
+    }
+  }
 
   return (
     <form className="max-w-md mx-auto bg-white p-14 rounded-lg text-center shadow-lg">
@@ -36,26 +58,23 @@ export default function RegisterForm() {
           ref={registerPassword}
         />
       </div>
+      {displayError === "short username" ? (
+        <div className="text-red-500">
+          Username needs to be at least 3 characters!
+        </div>
+      ) : null}
+      {displayError === "short password" ? (
+        <div className="text-red-500">
+          Password needs to be at least 5 characters long!
+        </div>
+      ) : null}
+      {displayError === "bad characters" ? (
+        <div className="text-red-500">Username has weird characters!</div>
+      ) : null}
 
       <button
         onClick={(e) => {
-          if (
-            validateCredentials(
-              registerUsername.current.value,
-              registerPassword.current.value
-            )
-          ) {
-            e.preventDefault();
-            handleCreateUser(
-              e,
-              registerUsername.current.value,
-              registerPassword.current.value,
-              navigate,
-              handleLogin,
-              setStatus
-            );
-          } else {
-          }
+          handleClickRegister(e);
         }}
         className="w-full py-2 mt-10 mb-4 bg-pink-500 hover:bg-pink-400 text-white font-semibold rounded-lg shadow-lg"
       >
