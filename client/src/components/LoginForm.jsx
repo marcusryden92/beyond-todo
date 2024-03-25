@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { handleLogin } from "../services/handleLogin";
 import { myContext } from "../context/Context";
 
+import { checkSession } from "../services/checkSession";
+
 export default function LoginForm() {
   const loginPassword = useRef();
   const loginUsername = useRef();
@@ -11,25 +13,9 @@ export default function LoginForm() {
 
   const navigate = useNavigate();
 
-  async function checkSession() {
-    const url = "http://localhost:3000/session";
-    const res = await fetch(url, {
-      method: "GET",
-      withCredentials: true,
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await res.json(); // Parse response body as JSON
-    console.log(res.status);
-    setStatus(res.status);
-    return { status: res.status, username: data.username }; // Return both status and username
-  }
-
   useEffect(() => {
     async function checkAuth() {
-      const sessionData = await checkSession(); // Get status and username from checkSession
+      const sessionData = await checkSession(setStatus); // Get status and username from checkSession
 
       if (sessionData.status === 200) {
         // Redirect to main page with the retrieved username

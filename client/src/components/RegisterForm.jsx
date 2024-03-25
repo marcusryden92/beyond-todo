@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { handleLogin } from "../services/handleLogin";
 import { myContext } from "../context/Context";
 
+import { handleCreateUser } from "../services/handleCreateUser";
+
 export default function RegisterForm() {
   const registerPassword = useRef();
   const registerUsername = useRef();
@@ -10,42 +12,6 @@ export default function RegisterForm() {
   const { setStatus } = myContext();
 
   const navigate = useNavigate();
-
-  async function createUser(e) {
-    if (
-      registerUsername.current.value === "" ||
-      registerPassword.current.value === ""
-    ) {
-      alert("Please enter a username and password");
-      return;
-    } else {
-      const userData = {
-        username: registerUsername.current.value,
-        password: registerPassword.current.value,
-      };
-
-      try {
-        const response = await fetch("http://localhost:3000/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userData),
-        });
-        const json = await response.json();
-        console.log("Data updated successfully:", json);
-        handleLogin(
-          e,
-          registerUsername.current.value,
-          registerPassword.current.value,
-          setStatus,
-          navigate
-        );
-      } catch (err) {
-        console.error("Error updating data:", err);
-      }
-    }
-  }
 
   return (
     <form className="max-w-md mx-auto bg-white p-14 rounded-lg text-center shadow-lg">
@@ -73,7 +39,14 @@ export default function RegisterForm() {
       <button
         onClick={(e) => {
           e.preventDefault();
-          createUser(e);
+          handleCreateUser(
+            e,
+            registerUsername.current.value,
+            registerPassword.current.value,
+            navigate,
+            handleLogin,
+            setStatus
+          );
         }}
         className="w-full py-2 mt-10 mb-4 bg-pink-500 hover:bg-pink-400 text-white font-semibold rounded-lg shadow-lg"
       >
