@@ -6,23 +6,31 @@ export default function RegisterForm() {
   const registerUsername = useRef();
 
   async function createUser() {
-    const userData = {
-      username: registerUsername.current.value,
-      password: registerPassword.current.value,
-    };
+    if (
+      registerUsername.current.value === "" ||
+      registerPassword.current.value === ""
+    ) {
+      alert("Please enter a username and password");
+      return;
+    } else {
+      const userData = {
+        username: registerUsername.current.value,
+        password: registerPassword.current.value,
+      };
 
-    try {
-      const response = await fetch("http://localhost:3000/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-      const json = await response.json();
-      console.log("Data updated successfully:", json);
-    } catch (err) {
-      console.error("Error updating data:", err);
+      try {
+        const response = await fetch("http://localhost:3000/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        });
+        const json = await response.json();
+        console.log("Data updated successfully:", json);
+      } catch (err) {
+        console.error("Error updating data:", err);
+      }
     }
   }
 

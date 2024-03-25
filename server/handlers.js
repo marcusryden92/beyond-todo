@@ -7,12 +7,13 @@ async function getTasks(user_id) {
   try {
     const result = await pool.query(
       `
-    SELECT *
-    FROM tasks
-    INNER JOIN users ON tasks.user_id = users.user_id
-    WHERE users.user_id = $1
-    AND tasks.task_completed = '0'; -- Filter out tasks where task_completed is 1
-    `,
+      SELECT *
+      FROM tasks
+      INNER JOIN users ON tasks.user_id = users.user_id
+      WHERE users.user_id = $1
+      AND tasks.task_completed = '0'
+      ORDER BY tasks.task_id;
+      `,
       [user_id]
     );
     return result.rows;
@@ -74,7 +75,7 @@ async function findUserByUsername(username) {
     return result.rows[0]; // Assuming there's only one user with the provided username
   } catch (error) {
     console.error("Error executing query in findUseByUsername:", error);
-    throw error; // Re-throw the error to be handled by the caller
+    throw error;
   }
 }
 
@@ -90,7 +91,7 @@ async function addUser(user) {
     return user;
   } catch (error) {
     console.error("Error executing query in addUser", error);
-    throw error; // Re-throw the error to be handled by the caller
+    throw error;
   }
 }
 

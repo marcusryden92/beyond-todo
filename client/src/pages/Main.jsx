@@ -6,8 +6,11 @@ import {
   editTask,
   addTask,
 } from "../services/useTasksApi";
+import { useNavigate } from "react-router-dom";
 
 export default function Main() {
+  const navigate = useNavigate();
+
   const [tasks, setTasks] = useState([]);
   const param = useParams();
   const username = param.user;
@@ -42,9 +45,28 @@ export default function Main() {
     const editedTask = taskInput.current.value;
     editTask(tasks[editTaskIndex].task_id, fetchTasks, editedTask);
   }
-  function logout() {
-    // Implement your logout logic here
-    console.log("Logged out");
+
+  async function handleLogout() {
+    const url = "http://localhost:3000/logout";
+
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        credentials: "include",
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.status === 200) {
+        console.log("res STATUS: " + res.status);
+        navigate("/");
+      } else {
+        alert("Failed to logout");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
 
   return (
@@ -109,7 +131,7 @@ export default function Main() {
           : ""}
       </ul>
       <button
-        onClick={logout}
+        onClick={handleLogout}
         className="w-full py-2 bg-red-500 hover:bg-red-400 text-white font-semibold rounded-lg shadow-lg"
       >
         LOG OUT

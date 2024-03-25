@@ -50,22 +50,27 @@ app.use(
 
 // MARCUS logging function.
 app.use((req, res, next) => {
-  console.log(req.session);
-  console.log(req.user);
   next();
 });
 
 app.use(passport.initialize());
 app.use(passport.session());
 
+function isAuth(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ error: "Unauthorized" });
+}
+
 // Setting upp passport
 async function verificationCallback(username, password, callback) {
   const user = await findUserByUsername(username);
-  const matchedPassword = await bcrypt.compare(password, user.password);
 
   if (!user) {
     return callback(null, false, { message: "No user exists" });
   }
+  const matchedPassword = await bcrypt.compare(password, user.password);
 
   if (!matchedPassword) {
     return callback(null, false, { message: "Wrong password" });
@@ -88,30 +93,48 @@ passport.deserializeUser(async (user, callback) => {
 
 // Register a new user
 app.post("/register", async (req, res) => {
-  const { username, password } = req.body;
+  try {
+    const { username, password } = req.body;
 
-  if (await findUserByUsername(username)) {
-    console.log("user already exist");
-    return res.status(409).json("User already exists.");
+    if (await findUserByUsername(username)) {
+      console.log("user already exist");
+      return res.status(409).json("User already exists.");
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const user_id = uuidv4(); // --ADDED BY MARCUS
+
+    const user = { user_id, username, hashedPassword };
+    addUser(user);
+
+    res.status(201).json("User registered successfully.");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json("Server error during registration.");
   }
-
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-
-  const user_id = uuidv4(); // --ADDED BY MARCUS
-
-  const user = { user_id, username, hashedPassword };
-  console.log(user);
-  addUser(user);
-
-  res.status(201).json("User registered successfully.");
 });
 
 // Login path + Authenticating a user
-app.post("/login", passport.authenticate("local"), (req, res) => {
-  console.log("Successful login for: " + req.user.username);
-
-  res.json("Welcome " + req.user.username);
+app.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json("Server error during login.");
+    }
+    if (!user) {
+      return res.status(401).json("Invalid username or password.");
+    }
+    req.logIn(user, function (err) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json("Server error during login.");
+      }
+      console.log("Successful login for: " + req.user.username);
+      return res.json("Welcome " + req.user.username);
+    });
+  })(req, res, next);
 });
 
 // Getting Session
@@ -124,7 +147,7 @@ app.get("/session", (req, res) => {
 });
 
 // Creating a task
-app.post("/task", async (req, res) => {
+app.post("/task", isAuth, async (req, res) => {
   try {
     const user_id = req.user.user_id;
     const task = req.body.task;
@@ -138,12 +161,9 @@ app.post("/task", async (req, res) => {
   }
 });
 
-app.put("/task", async (req, res) => {
+app.put("/task", isAuth, async (req, res) => {
   const task_id = req.body.task_id; // Directly use task_id from req.body
   const task = req.body.task; // Directly use task from req.body
-
-  console.log("task_id: " + task_id);
-  console.log("task: " + task);
 
   try {
     await editTask(task, task_id);
@@ -155,7 +175,7 @@ app.put("/task", async (req, res) => {
 });
 
 // Deleting a task
-app.delete("/task", async (req, res) => {
+app.delete("/task", isAuth, async (req, res) => {
   // Ensure req.body exists and has a task_id property
   if (!req.body || !req.body.task_id) {
     return res.status(400).send("Missing task_id in request body"); // Send 400 error if task_id is missing
@@ -171,10 +191,25 @@ app.delete("/task", async (req, res) => {
   }
 });
 
+app.post("/logout", (req, res) => {
+  req.logout(function (err) {
+    if (err) {
+      console.error(err);
+      return res.status(500).json("Server error during logout.");
+    }
+    req.session.destroy(function (err) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json("Server error during logout.");
+      }
+      res.send(); // send to the client
+    });
+  });
+});
+
 // Getting User
-app.get("/tasks", async (req, res) => {
+app.get("/tasks", isAuth, async (req, res) => {
   const user_id = req.user.user_id;
-  console.log("user ID from HEADER :" + user_id);
   const tasks = await getTasks(user_id);
   res.json(tasks);
 });
