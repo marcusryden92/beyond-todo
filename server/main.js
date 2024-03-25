@@ -125,9 +125,17 @@ app.get("/session", (req, res) => {
 
 // Creating a task
 app.post("/task", async (req, res) => {
-  const user_id = req.user.user_id;
-  const task = req.body.task;
-  createTask(user_id, task);
+  try {
+    const user_id = req.user.user_id;
+    const task = req.body.task;
+    await createTask(user_id, task);
+    res.status(200).json({ message: "Task created successfully" });
+  } catch (error) {
+    console.error("Error creating task:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while creating the task" });
+  }
 });
 
 // Deleting a task

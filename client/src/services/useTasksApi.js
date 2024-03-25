@@ -1,4 +1,4 @@
-export async function getTasks() {
+export async function getTasks(setTasks) {
   const url = "http://localhost:3000/tasks";
   const res = await fetch(url, {
     method: "GET",
@@ -10,13 +10,15 @@ export async function getTasks() {
   });
   if (res.ok) {
     const tasks = await res.json();
-    return tasks;
+
+    setTasks(tasks);
+    return;
   } else {
     console.error("HTTP error:", res.status);
   }
 }
 
-export async function deleteTask(task) {
+export async function deleteTask(task, fetchTasks) {
   const url = "http://localhost:3000/task";
   console.log(task);
   const res = await fetch(url, {
@@ -29,15 +31,17 @@ export async function deleteTask(task) {
     },
   });
   if (res.ok) {
-    const contentType = res.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      const tasks = await res.json();
-      return tasks;
-    } else {
-      // Handle non-JSON response here, for example:
-      const textResponse = await res.text();
-      return textResponse;
-    }
+    // const contentType = res.headers.get("content-type");
+    // if (contentType && contentType.includes("application/json")) {
+    //   const tasks = await res.json();
+    //   return tasks;
+    // } else {
+    //   // Handle non-JSON response here, for example:
+    //   const textResponse = await res.text();
+    //   return textResponse;
+    // }
+
+    fetchTasks();
   } else {
     console.error("HTTP error:", res.status);
     // Log the actual response text
@@ -50,7 +54,7 @@ export async function editTask() {
   return;
 }
 
-export async function addTask(task) {
+export async function addTask(task, fetchTasks) {
   const url = "http://localhost:3000/task";
   console.log(task);
 
@@ -64,6 +68,7 @@ export async function addTask(task) {
     },
   });
   if (res.ok) {
+    fetchTasks();
     console.log("added task");
   } else {
     console.error("Error adding task:", res.status);

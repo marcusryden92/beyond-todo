@@ -19,21 +19,16 @@ export default function Main() {
   }, []);
 
   async function fetchTasks() {
-    const tasks = await getTasks();
-    setTasks(tasks);
+    getTasks(setTasks);
   }
 
   function addLocalTask() {
     const newTask = taskInput.current.value.trim();
-    addTask(newTask);
-
-    fetchTasks();
+    addTask(newTask, fetchTasks);
   }
 
   function deleteLocalTask(index) {
-    deleteTask(tasks[index]);
-
-    fetchTasks();
+    deleteTask(tasks[index], fetchTasks);
   }
 
   function editLocalTask(index) {
