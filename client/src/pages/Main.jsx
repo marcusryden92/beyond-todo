@@ -25,7 +25,7 @@ export default function Main() {
   async function fetchTasks() {
     getTasks(setTasks);
   }
-  function addLocalTask() {
+  function handleAdd() {
     if (taskInput.current.value) {
       const newTask = taskInput.current.value.trim();
       addTask(newTask, fetchTasks);
@@ -37,10 +37,10 @@ export default function Main() {
     taskInput.current.value = tasks[index].task;
   }
 
-  function deleteLocalTask(index) {
-    deleteTask(tasks[index], fetchTasks);
+  function handleDelete(index) {
+    deleteTask(tasks[index].task_id, fetchTasks);
   }
-  function editLocalTask() {
+  function handleEdit() {
     setEditingTask((prev) => !prev);
     const editedTask = taskInput.current.value;
     editTask(tasks[editTaskIndex].task_id, fetchTasks, editedTask);
@@ -86,14 +86,14 @@ export default function Main() {
       <div>
         {editingTask ? (
           <button
-            onClick={editLocalTask}
+            onClick={handleEdit}
             className="w-full py-2 mb-4 bg-pink-500 hover:bg-pink-400 text-white font-semibold rounded-lg shadow-lg"
           >
             UPDATE TODO
           </button>
         ) : (
           <button
-            onClick={addLocalTask}
+            onClick={handleAdd}
             className="w-full py-2 mb-4 bg-pink-500 hover:bg-pink-400 text-white font-semibold rounded-lg shadow-lg"
           >
             ADD TODO
@@ -120,7 +120,7 @@ export default function Main() {
                     Edit
                   </button>
                   <button
-                    onClick={() => deleteLocalTask(index)}
+                    onClick={() => handleDelete(index)}
                     className="text-pink-500 hover:text-pink-700 mr-2"
                   >
                     Remove

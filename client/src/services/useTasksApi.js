@@ -20,13 +20,14 @@ export async function getTasks(setTasks) {
   }
 }
 
-export async function deleteTask(task, fetchTasks) {
+export async function deleteTask(task_id, fetchTasks) {
   const url = "http://localhost:3000/task";
+  const task_id_json = { task_id: task_id };
   try {
     const res = await fetch(url, {
       method: "DELETE",
       withCredentials: true,
-      body: JSON.stringify(task),
+      body: JSON.stringify(task_id_json),
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
