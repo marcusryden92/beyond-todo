@@ -140,9 +140,10 @@ app.post("/login", (req, res, next) => {
 // Getting Session
 app.get("/session", (req, res) => {
   if (req.isAuthenticated()) {
-    res.status(200).json("Authorized ");
+    const username = req.user.username;
+    res.status(200).json({ status: 200, username: username }); // Return status and username
   } else {
-    res.status(401).json("Unauthorized");
+    res.status(401).json({ status: 401, username: null }); // Return status and null username
   }
 });
 

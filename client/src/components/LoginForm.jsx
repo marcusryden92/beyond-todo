@@ -12,33 +12,32 @@ export default function LoginForm() {
     const url = "http://localhost:3000/session";
     const res = await fetch(url, {
       method: "GET",
+      withCredentials: true,
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
     });
+    const data = await res.json(); // Parse response body as JSON
     console.log(res.status);
     setStatus(res.status);
-    return res.status;
+    return { status: res.status, username: data.username }; // Return both status and username
   }
 
   useEffect(() => {
-    console.log("usEffect running");
-
-    if (status === 200) {
-      console.log("Successful login detected");
-      navigate(`/main/${loginUsername.current.value}`);
-      return;
-    }
-
     async function checkAuth() {
-      if ((await checkSession()) === 200) {
-        navigate(`/main/${loginUsername.current.value}`);
+      const sessionData = await checkSession(); // Get status and username from checkSession
+
+      if (sessionData.status === 200) {
+        // Redirect to main page with the retrieved username
+        navigate(`/main/${sessionData.username}`);
       }
-      console.log(await checkSession());
+
+      console.log(sessionData.status);
     }
 
     checkAuth();
-  });
+  }, []);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -61,6 +60,7 @@ export default function LoginForm() {
       const json = await response.json();
       console.log("Data updated successfully:", json);
       setStatus(response.status);
+      navigate(`/main/${loginUsername.current.value}`);
     } catch (err) {
       console.error("Error updating data:", err);
     }
@@ -108,10 +108,6 @@ export default function LoginForm() {
         >
           Login
         </button>
-        {/* <p className="text-gray-700">
-          Not a member?
-          <div className="text-pink-500 hover:underline">Sign up</div>
-        </p> */}
       </form>
     </>
   );
