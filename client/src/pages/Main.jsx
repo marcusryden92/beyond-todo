@@ -27,31 +27,14 @@ export default function Main() {
   function addLocalTask() {
     const newTask = taskInput.current.value.trim();
     addTask(newTask);
-    if (newTask !== "") {
-      if (editIndex !== null) {
-        const updatedTask = [...tasks];
-        updatedTask[editIndex] = newTask;
-        setEditIndex(null);
-      } else {
-        setTasks((prevTasks) => [...prevTasks, newTask]);
-      }
-      taskInput.current.value = "";
-    }
-    setTimeout(fetchTasks, 200);
+
+    fetchTasks();
   }
 
   function deleteLocalTask(index) {
     deleteTask(tasks[index]);
-    setTasks((prevTasks) => {
-      const updatedTasks = [...prevTasks];
-      updatedTasks.splice(index, 1);
-      return updatedTasks;
-    });
 
-    if (editIndex === index) {
-      setEditIndex(null);
-    }
-    setTimeout(fetchTasks, 200);
+    fetchTasks();
   }
 
   function editLocalTask(index) {
