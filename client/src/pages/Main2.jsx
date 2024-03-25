@@ -1,158 +1,110 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import {
-  getTasks,
-  deleteTask,
-  editTask,
-  addTask,
-} from "../services/useTasksApi";
-import toiletStart from "../images/toiletStart.png";
-import toiletMiddle from "../images/toiletMiddle.png";
-import toiletEnd from "../images/toiletEnd.png";
+import { getTasks, deleteTask, editTask, addTask } from "../services/useTasksApi";
+import Task from "../components/Task";
+import { IoMdAdd } from "react-icons/io";
+import anime from "animejs";
 
 export default function Main() {
-  const [tasks, setTasks] = useState([]);
-  const param = useParams();
-  const username = param.user;
-  const [editIndex, setEditIndex] = useState(null);
-  const taskInput = useRef();
+	const [tasks, setTasks] = useState([]);
+	const param = useParams();
+	const username = param.user;
+	const [editIndex, setEditIndex] = useState(null);
+	const taskInput = useRef();
 
-  function addLocalTask() {
-    const newTask = taskInput.current.value.trim();
-    addTask(newTask);
-    if (newTask !== "") {
-      if (editIndex !== null) {
-        const updatedTask = [...tasks];
-        updatedTask[editIndex] = newTask;
-        setEditIndex(null);
-      } else {
-        setTasks([...tasks, newTask]);
-      }
-      taskInput.current.value = "";
-    }
-  }
+	function addLocalTask() {
+		const newTask = taskInput.current.value.trim();
+		addTask(newTask);
+		if (newTask !== "") {
+			if (editIndex !== null) {
+				const updatedTask = [...tasks];
+				updatedTask[editIndex] = newTask;
+				setEditIndex(null);
+			} else {
+				setTasks([...tasks, newTask]);
+			}
+			taskInput.current.value = "";
+		}
+	}
 
-  function deleteLocalTask(index) {
-    const updatedTasks = [...tasks];
-    updatedTasks.splice(index, 1);
+	function logout() {
+		// Implement your logout logic here
+		console.log("Logged out");
+	}
 
-    if (editIndex === index) {
-      setEditIndex(null);
-    }
-  }
+	useEffect(() => {
+		async function fetchTasks() {
+			const tasks = await getTasks();
+			setTasks(tasks);
+		}
+		fetchTasks();
+	}, []);
 
-  function editLocalTask(index) {
-    taskInput.current.value = tasks[index];
-    setEditIndex(index);
-  }
+	return (
+		<main className=" bg-main w-full h-screen  bg-bg overflow-hidden">
+			<div className=" mx-auto ">
+				<div className=" mx-auto max-w-[45em] pt-6  px-10 ">
+					{/* antennas */}
+					<div className="flex justify-between -mx-4 h-16 -mb-4">
+						<div className=" w-[20%]  border-solid border-border border-r-borderThickness border-t-borderThickness border-bug rounded-tr-lg"></div>
+						<div className=" w-[20%]  border-solid border-border border-l-borderThickness border-t-borderThickness rounded-tl-lg  border-bug"></div>
+					</div>
 
-  function logout() {
-    // Logout logic here
-    console.log("Logged out");
-  }
+					{/* head */}
+					<div className=" bg-bug rounded-tl-[4em] rounded-tr-[4em] flex items-center  border-b-0 overflow-hidden text-text py-4">
+						<div className=" w-[3em] bg-eyes h-[6em] rounded-tr-full rounded-br-full"></div>
+						<div className=" mx-auto p-4 w-[80%] text-center">
+							<h1 className="text-3xl sm:text-6xl font-extrabold uppercase font-todo tracking-wider">
+								{username}
+							</h1>
+							<p className=" text-base sm:text-xl font-bold mb-4 uppercase">
+								You have a {tasks.length}pede
+							</p>
+							<div className="flex rounded-full overflow-hidden">
+								<input
+									type="text"
+									placeholder="Add something todo for a longer-pede"
+									ref={taskInput}
+									className=" text-sm sm:text-base flex-1 px-4 py-2 bg-bugSecondary h-full "
+								/>
 
-  useEffect(() => {
-    async function fetchTasks() {
-      const tasks = await getTasks();
-      setTasks(tasks);
-    }
-    fetchTasks();
-  }, []);
+								<button
+									onClick={addLocalTask}
+									className=" bg-bugSecondary brightness-110 w-10 flex justify-center items-center"
+								>
+									{editIndex !== null ? (
+										"UPDATE TODO"
+									) : (
+										<IoMdAdd />
+									)}
+								</button>
+							</div>
+						</div>
+						<div className=" w-[3em] bg-eyes h-[6em] rounded-tl-full rounded-bl-full"></div>
+					</div>
+				</div>
 
-  return (
-    <div className="flex flex-col items-center h-screen">
-      <div
-        className="max-w-md mx-auto bg-white text-black p-8 text-center bg-cover"
-        style={{
-          position: "sticky",
-          top: "0",
-          backgroundImage: `url(${toiletStart})`,
-          backgroundSize: "100%",
-          backgroundPosition: "top",
-          backgroundRepeat: "no-repeat",
-          minHeight: "32%",
-          minWidth: "30%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-        }}
-      >
-        <div>
-          <h2 className="text-2xl font-semibold mb-4">
-            Hello {username}, you have {tasks.length}{" "}
-            {tasks.length === 1 ? "task" : "tasks"}
-          </h2>
-        </div>
-        <div className="mb-4">
-          <input
-            type="text"
-            className="w-3/4 px-4 py-2 mt-2 bg-gray-200 rounded-lg focus:ring-violet-500 focus:border-violet-500"
-            placeholder="Enter your todo"
-            ref={taskInput}
-          />
-        </div>
-        <button
-          onClick={addLocalTask}
-          className="w-2/4 py-2 mb-4 bg-green-500 hover:bg-green-400 text-white font-semibold rounded-lg shadow-lg"
-        >
-          {editIndex !== null ? "UPDATE TODO" : "ADD TODO"}
-        </button>
-      </div>
+				{/* body */}
+				<div className=" mx-auto w-full overflow-scroll pb-16 h-[68vh] px-10 ">
+					<ul className="text-left max-w-[40em] mx-auto">
+						{tasks
+							? tasks.map((tasks, index) => (
+									<Task index={index} tasks={tasks} />
+							  ))
+							: ""}
+					</ul>
 
-      {tasks.length > 0 && (
-        <div className="max-w-md mx-auto bg-white text-black text-center bg-cover">
-          <ul className="text-left">
-            {tasks.map((task, index) => (
-              <li
-                key={index}
-                className="flex justify-between items-center py-2 border-b border-gray-200"
-                style={{
-                  backgroundImage: `url(${toiletMiddle})`,
-                  backgroundSize: "100%",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                  maxWidth: "374px",
-                }}
-              >
-                <span className="pl-40">{task}</span>
-                <div className="pl-4 pr-5 space-x-3">
-                  <button
-                    onClick={() => editLocalTask(index)}
-                    className="text-blue-500 hover:text-blue-700 mr-2"
-                  >
-                    ✏️
-                  </button>
-                  <button
-                    onClick={() => deleteLocalTask(index)}
-                    className="text-pink-500 hover:text-pink-700 mr-2"
-                  >
-                    ❌
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      <div
-        className="max-w-md mx-auto bg-white text-black p-8 text-center bg-cover"
-        style={{
-          top: "0",
-          backgroundImage: `url(${toiletEnd})`,
-          backgroundSize: "50%",
-          backgroundPosition: "top",
-          backgroundRepeat: "no-repeat",
-          minWidth: "100%", //
-          // minHeight: "50%",
-        }}
-      ></div>
-      <button
-        onClick={logout}
-        className="max-w-md mx-auto w-full py-2 mb-4 bg-red-500 hover:bg-red-400 text-white font-semibold rounded-lg shadow-lg"
-      >
-        LOG OUT
-      </button>
-    </div>
-  );
+					{/* bytt */}
+					<div className=" mx-auto bg-bug p-4 rounded-bl-[4em] rounded-br-[4em] flex justify-center border-solid border-t-2 border-bugSecondary max-w-[40em]">
+						<button
+							onClick={logout}
+							className=" py-2 text-white font-semibold rounded-full bg-bugSecondary  hover:bg-eyes hover:text-bg transition duration-200 px-4"
+						>
+							LOG OUT
+						</button>
+					</div>
+				</div>
+			</div>
+		</main>
+	);
 }

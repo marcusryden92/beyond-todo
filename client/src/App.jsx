@@ -2,7 +2,7 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
-import Main from "./pages/Main";
+import Main from "./pages/Main2";
 
 export default function App() {
   const [data, setData] = useState(null);
