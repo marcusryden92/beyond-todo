@@ -25,6 +25,7 @@ export default function Main() {
   async function fetchTasks() {
     getTasks(setTasks);
   }
+
   function handleAdd() {
     if (taskInput.current.value) {
       const newTask = taskInput.current.value.trim();
@@ -40,6 +41,7 @@ export default function Main() {
   function handleDelete(index) {
     deleteTask(tasks[index].task_id, fetchTasks);
   }
+
   function handleEdit() {
     setEditingTask((prev) => !prev);
     const editedTask = taskInput.current.value;
