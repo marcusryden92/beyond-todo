@@ -4,6 +4,7 @@ import { handleLogin } from "../services/handleLogin";
 import { myContext } from "../context/Context";
 
 import { handleCreateUser } from "../services/handleCreateUser";
+import { validateCredentials } from "../services/validateCredentials";
 
 export default function RegisterForm() {
   const registerPassword = useRef();
@@ -38,15 +39,23 @@ export default function RegisterForm() {
 
       <button
         onClick={(e) => {
-          e.preventDefault();
-          handleCreateUser(
-            e,
-            registerUsername.current.value,
-            registerPassword.current.value,
-            navigate,
-            handleLogin,
-            setStatus
-          );
+          if (
+            validateCredentials(
+              registerUsername.current.value,
+              registerPassword.current.value
+            )
+          ) {
+            e.preventDefault();
+            handleCreateUser(
+              e,
+              registerUsername.current.value,
+              registerPassword.current.value,
+              navigate,
+              handleLogin,
+              setStatus
+            );
+          } else {
+          }
         }}
         className="w-full py-2 mt-10 mb-4 bg-pink-500 hover:bg-pink-400 text-white font-semibold rounded-lg shadow-lg"
       >
