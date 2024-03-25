@@ -11,7 +11,8 @@ export default function Main() {
   const [tasks, setTasks] = useState([]);
   const param = useParams();
   const username = param.user;
-  const [editIndex, setEditIndex] = useState(null);
+  const [editingTask, setEditingTask] = useState(false);
+  const [editTaskIndex, setEditTaskIndex] = useState(null);
   const taskInput = useRef();
 
   useEffect(() => {
@@ -21,7 +22,6 @@ export default function Main() {
   async function fetchTasks() {
     getTasks(setTasks);
   }
-
   function addLocalTask() {
     if (taskInput.current.value) {
       const newTask = taskInput.current.value.trim();
@@ -30,15 +30,18 @@ export default function Main() {
     }
   }
 
+  function handleEditTask(index) {
+    taskInput.current.value = tasks[index].task;
+  }
+
   function deleteLocalTask(index) {
     deleteTask(tasks[index], fetchTasks);
   }
-
-  function editLocalTask(index) {
-    taskInput.current.value = tasks[index];
-    setEditIndex(index);
+  function editLocalTask() {
+    setEditingTask((prev) => !prev);
+    const editedTask = taskInput.current.value;
+    editTask(tasks[editTaskIndex].task_id, fetchTasks, editedTask);
   }
-
   function logout() {
     // Implement your logout logic here
     console.log("Logged out");
@@ -58,12 +61,23 @@ export default function Main() {
           ref={taskInput}
         />
       </div>
-      <button
-        onClick={addLocalTask}
-        className="w-full py-2 mb-4 bg-pink-500 hover:bg-pink-400 text-white font-semibold rounded-lg shadow-lg"
-      >
-        {editIndex !== null ? "UPDATE TODO" : "ADD TODO"}
-      </button>
+      <div>
+        {editingTask ? (
+          <button
+            onClick={editLocalTask}
+            className="w-full py-2 mb-4 bg-pink-500 hover:bg-pink-400 text-white font-semibold rounded-lg shadow-lg"
+          >
+            UPDATE TODO
+          </button>
+        ) : (
+          <button
+            onClick={addLocalTask}
+            className="w-full py-2 mb-4 bg-pink-500 hover:bg-pink-400 text-white font-semibold rounded-lg shadow-lg"
+          >
+            ADD TODO
+          </button>
+        )}
+      </div>
       <ul className="text-left">
         {tasks
           ? tasks.map((task, index) => (
@@ -74,7 +88,11 @@ export default function Main() {
                 <span>{task.task}</span>
                 <div>
                   <button
-                    onClick={() => editLocalTask(index)}
+                    onClick={() => {
+                      handleEditTask(index);
+                      setEditingTask((prev) => !prev);
+                      setEditTaskIndex(index);
+                    }}
                     className="text-blue-500 hover:text-blue-700 mr-2"
                   >
                     Edit

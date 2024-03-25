@@ -1,3 +1,5 @@
+import { json } from "react-router-dom";
+
 export async function getTasks(setTasks) {
   const url = "http://localhost:3000/tasks";
   const res = await fetch(url, {
@@ -30,16 +32,6 @@ export async function deleteTask(task, fetchTasks) {
     },
   });
   if (res.ok) {
-    // const contentType = res.headers.get("content-type");
-    // if (contentType && contentType.includes("application/json")) {
-    //   const tasks = await res.json();
-    //   return tasks;
-    // } else {
-    //   // Handle non-JSON response here, for example:
-    //   const textResponse = await res.text();
-    //   return textResponse;
-    // }
-
     fetchTasks();
   } else {
     console.error("HTTP error:", res.status);
@@ -49,14 +41,28 @@ export async function deleteTask(task, fetchTasks) {
   }
 }
 
-export async function editTask() {
-  return;
+export async function editTask(task_id, fetchTasks, task) {
+  const url = "http://localhost:3000/task";
+  const res = await fetch(url, {
+    method: "PUT",
+    withCredentials: true,
+    body: JSON.stringify({ task_id: task_id, task: task }),
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (res.ok) {
+    fetchTasks();
+  } else {
+    console.error("HTTP error:", res.status);
+    const errorText = await res.text();
+    console.error("Response text:", errorText);
+  }
 }
 
 export async function addTask(task, fetchTasks) {
   const url = "http://localhost:3000/task";
-  console.log(task);
-
   const res = await fetch(url, {
     method: "POST",
     body: JSON.stringify({ task: task }),

@@ -75,7 +75,6 @@ export default function LoginForm() {
           </label>
           <input
             ref={loginUsername}
-            id="name"
             type="text"
             placeholder="Enter your name"
             className="w-full px-4 py-2 mt-2 bg-gray-200 rounded-lg focus:ring-pink-500 focus:border-pink-500"
@@ -87,7 +86,6 @@ export default function LoginForm() {
           </label>
           <input
             ref={loginPassword}
-            id="password"
             type="password"
             placeholder="Enter your password"
             className="w-full px-4 py-2 mt-2 bg-gray-200 rounded-lg focus:ring-pink-500 focus:border-pink-500"

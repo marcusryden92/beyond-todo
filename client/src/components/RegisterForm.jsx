@@ -33,7 +33,6 @@ export default function RegisterForm() {
           Username
         </label>
         <input
-          id="username"
           type="text"
           className="w-full px-4 py-2 mt-2 bg-gray-200 rounded-lg focus:ring-violet-500 focus:border-violet-500"
           ref={registerUsername}
@@ -44,7 +43,6 @@ export default function RegisterForm() {
           Password
         </label>
         <input
-          id="password"
           type="password"
           className="w-full px-4 py-2 mt-2 bg-gray-200 rounded-lg focus:ring-violet-500 focus:border-violet-500"
           ref={registerPassword}

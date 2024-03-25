@@ -35,6 +35,21 @@ async function createTask(user_id, task) {
   }
 }
 
+async function editTask(task, task_id) {
+  try {
+    const result = await pool.query(
+      `UPDATE tasks
+         SET task = ($1)
+         WHERE task_id = ($2)`,
+      [task, task_id]
+    );
+    return result;
+  } catch (error) {
+    console.error("Error executing query in editTask:", error);
+    throw error;
+  }
+}
+
 async function deleteTask(task_id) {
   try {
     const result = await pool.query(
@@ -86,4 +101,5 @@ module.exports = {
   getTasks,
   createTask,
   deleteTask,
+  editTask,
 };

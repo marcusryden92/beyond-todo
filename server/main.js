@@ -6,10 +6,10 @@ const port = process.env.PORT || 3000;
 const {
   createTask,
   deleteTask,
-  readTasks,
   findUserByUsername,
   addUser,
   getTasks,
+  editTask,
 } = require("./handlers"); // Importing handlers
 const { setupRouting } = require("./express");
 const pool = require("./db");
@@ -135,6 +135,22 @@ app.post("/task", async (req, res) => {
     res
       .status(500)
       .json({ error: "An error occurred while creating the task" });
+  }
+});
+
+app.put("/task", async (req, res) => {
+  const task_id = req.body.task_id; // Directly use task_id from req.body
+  const task = req.body.task; // Directly use task from req.body
+
+  console.log("task_id: " + task_id);
+  console.log("task: " + task);
+
+  try {
+    await editTask(task, task_id);
+    res.sendStatus(200); // Send success response
+  } catch (error) {
+    console.error("Error editing task:", error);
+    res.status(500).send("Internal Server Error"); // Send 500 error if editTask function fails
   }
 });
 
