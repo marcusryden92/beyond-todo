@@ -6,7 +6,7 @@ import RegisterForm from "../components/RegisterForm";
 export default function Login() {
   return (
     <div className="flex justify-center">
-      <div className="flex inline-block">
+      <div className="flex inline-block gap-5 mt-24">
         <LoginForm />
         <RegisterForm />
       </div>

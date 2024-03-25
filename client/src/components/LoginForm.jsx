@@ -44,7 +44,7 @@ export default function LoginForm() {
 
   return (
     <>
-      <form className="max-w-md mx-auto bg-white p-8 rounded-lg text-center shadow-lg">
+      <form className="max-w-md mx-auto bg-white p-14 rounded-lg text-center shadow-lg">
         <div className="mb-4">
           <label htmlFor="name" className="block text-gray-700">
             Name
