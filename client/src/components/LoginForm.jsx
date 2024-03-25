@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { handleLogin } from "../services/handleLogin";
 import { myContext } from "../context/Context";
@@ -7,9 +7,8 @@ export default function LoginForm() {
   const loginPassword = useRef();
   const loginUsername = useRef();
 
-  const { status, setStatus } = myContext();
+  const { setStatus } = myContext();
 
-  const username = useRef();
   const navigate = useNavigate();
 
   async function checkSession() {
