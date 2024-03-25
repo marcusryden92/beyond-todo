@@ -1,11 +1,17 @@
 import { useRef } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { handleLogin } from "../services/handleLogin";
+import { myContext } from "../context/Context";
 
 export default function RegisterForm() {
   const registerPassword = useRef();
   const registerUsername = useRef();
 
-  async function createUser() {
+  const { setStatus } = myContext();
+
+  const navigate = useNavigate();
+
+  async function createUser(e) {
     if (
       registerUsername.current.value === "" ||
       registerPassword.current.value === ""
@@ -28,6 +34,13 @@ export default function RegisterForm() {
         });
         const json = await response.json();
         console.log("Data updated successfully:", json);
+        handleLogin(
+          e,
+          registerUsername.current.value,
+          registerPassword.current.value,
+          setStatus,
+          navigate
+        );
       } catch (err) {
         console.error("Error updating data:", err);
       }
@@ -60,18 +73,18 @@ export default function RegisterForm() {
       <button
         onClick={(e) => {
           e.preventDefault();
-          createUser();
+          createUser(e);
         }}
-        className="w-full py-2 mb-4 bg-pink-500 hover:bg-pink-400 text-white font-semibold rounded-lg shadow-lg"
+        className="w-full py-2 mt-10 mb-4 bg-pink-500 hover:bg-pink-400 text-white font-semibold rounded-lg shadow-lg"
       >
         SIGN UP
       </button>
-      <p>
+      {/* <p>
         Already a member?{" "}
         <Link to="/" className="text-pink-500 hover:underline">
           Log in
         </Link>
-      </p>
+      </p> */}
     </form>
   );
 }

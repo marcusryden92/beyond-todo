@@ -1,9 +1,13 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 export const ContextProvider = createContext(null);
 
 export const Context = ({ children }) => {
   const [tasks, setTasks] = useState([]);
+  const [status, setStatus] = useState();
+
   const value = {
+    status,
+    setStatus,
     tasks,
     setTasks,
   };

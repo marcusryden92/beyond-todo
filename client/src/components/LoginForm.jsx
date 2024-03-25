@@ -1,10 +1,14 @@
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { handleLogin } from "../services/handleLogin";
+import { myContext } from "../context/Context";
 
 export default function LoginForm() {
   const loginPassword = useRef();
   const loginUsername = useRef();
-  const [status, setStatus] = useState();
+
+  const { status, setStatus } = myContext();
+
   const username = useRef();
   const navigate = useNavigate();
 
@@ -38,33 +42,6 @@ export default function LoginForm() {
 
     checkAuth();
   }, []);
-
-  async function handleLogin(e) {
-    e.preventDefault();
-
-    const userData = {
-      username: loginUsername.current.value,
-      password: loginPassword.current.value,
-    };
-
-    try {
-      const response = await fetch("http://localhost:3000/login", {
-        method: "POST",
-        withCredentials: true,
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-      const json = await response.json();
-      console.log("Data updated successfully:", json);
-      setStatus(response.status);
-      navigate(`/main/${loginUsername.current.value}`);
-    } catch (err) {
-      console.error("Error updating data:", err);
-    }
-  }
 
   return (
     <>
@@ -101,7 +78,13 @@ export default function LoginForm() {
         </div>
         <button
           onClick={(e) => {
-            handleLogin(e);
+            handleLogin(
+              e,
+              loginUsername.current.value,
+              loginPassword.current.value,
+              setStatus,
+              navigate
+            );
           }}
           type="submit"
           className="w-full py-2 mb-4 bg-pink-500 hover:bg-pink-400 text-white font-semibold rounded-lg shadow-lg"
