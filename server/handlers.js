@@ -10,7 +10,8 @@ async function getTasks(user_id) {
     SELECT *
     FROM tasks
     INNER JOIN users ON tasks.user_id = users.user_id
-    WHERE users.user_id = $1;
+    WHERE users.user_id = $1
+    AND tasks.task_completed = '0'; -- Filter out tasks where task_completed is 1
     `,
       [user_id]
     );
@@ -30,6 +31,19 @@ async function createTask(user_id, task) {
     return result;
   } catch (error) {
     console.error("Error executing query in createTask:", error);
+    throw error;
+  }
+}
+
+async function deleteTask(task_id) {
+  try {
+    const result = await pool.query(
+      `UPDATE tasks SET task_completed = B'1' WHERE task_id = $1`, // Use binary string B'1' to represent true for BIT column
+      [task_id]
+    );
+    return result;
+  } catch (error) {
+    console.error("Error executing query in deleteTask:", error.message); // Log specific error message
     throw error;
   }
 }
@@ -71,4 +85,5 @@ module.exports = {
   addUser,
   getTasks,
   createTask,
+  deleteTask,
 };

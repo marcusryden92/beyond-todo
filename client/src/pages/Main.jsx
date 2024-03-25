@@ -14,6 +14,16 @@ export default function Main() {
   const [editIndex, setEditIndex] = useState(null);
   const taskInput = useRef();
 
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  async function fetchTasks() {
+    const tasks = await getTasks();
+    setTasks(tasks);
+    console.log(tasks);
+  }
+
   function addLocalTask() {
     const newTask = taskInput.current.value.trim();
     addTask(newTask);
@@ -23,19 +33,25 @@ export default function Main() {
         updatedTask[editIndex] = newTask;
         setEditIndex(null);
       } else {
-        setTasks([...tasks, newTask]);
+        setTasks((prevTasks) => [...prevTasks, newTask]);
       }
       taskInput.current.value = "";
     }
+    setTimeout(fetchTasks, 200);
   }
 
   function deleteLocalTask(index) {
-    const updatedTasks = [...tasks];
-    updatedTasks.splice(index, 1);
+    deleteTask(tasks[index]);
+    setTasks((prevTasks) => {
+      const updatedTasks = [...prevTasks];
+      updatedTasks.splice(index, 1);
+      return updatedTasks;
+    });
 
     if (editIndex === index) {
       setEditIndex(null);
     }
+    setTimeout(fetchTasks, 200);
   }
 
   function editLocalTask(index) {
@@ -47,14 +63,6 @@ export default function Main() {
     // Implement your logout logic here
     console.log("Logged out");
   }
-
-  useEffect(() => {
-    async function fetchTasks() {
-      const tasks = await getTasks();
-      setTasks(tasks);
-    }
-    fetchTasks();
-  }, []);
 
   return (
     <div className="max-w-md mx-auto bg-white text-black p-8 rounded-lg text-center shadow-lg">
@@ -78,12 +86,12 @@ export default function Main() {
       </button>
       <ul className="text-left">
         {tasks
-          ? tasks.map((tasks, index) => (
+          ? tasks.map((task, index) => (
               <li
                 key={index}
                 className="flex justify-between items-center py-2 border-b border-gray-200"
               >
-                <span>{tasks.task}</span>
+                <span>{task.task}</span>
                 <div>
                   <button
                     onClick={() => editLocalTask(index)}

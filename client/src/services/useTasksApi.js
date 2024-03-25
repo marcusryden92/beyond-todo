@@ -18,19 +18,31 @@ export async function getTasks() {
 
 export async function deleteTask(task) {
   const url = "http://localhost:3000/task";
+  console.log(task);
   const res = await fetch(url, {
-    method: "PUT",
+    method: "DELETE",
     withCredentials: true,
+    body: JSON.stringify(task),
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
   });
   if (res.ok) {
-    const tasks = await res.json();
-    return tasks;
+    const contentType = res.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const tasks = await res.json();
+      return tasks;
+    } else {
+      // Handle non-JSON response here, for example:
+      const textResponse = await res.text();
+      return textResponse;
+    }
   } else {
     console.error("HTTP error:", res.status);
+    // Log the actual response text
+    const errorText = await res.text();
+    console.error("Response text:", errorText);
   }
 }
 
