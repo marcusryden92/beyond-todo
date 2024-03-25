@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function LoginForm() {
   const loginPassword = useRef();
@@ -110,10 +110,12 @@ export default function LoginForm() {
         >
           Login
         </button>
-        {/* <p className="text-gray-700">
-          Not a member?
-          <div className="text-pink-500 hover:underline">Sign up</div>
-        </p> */}
+        <p className="text-gray-700">
+          Not a member?{" "}
+          <Link to="/signup" className="text-pink-500 hover:underline">
+            Sign up
+          </Link>
+        </p>
       </form>
     </>
   );
