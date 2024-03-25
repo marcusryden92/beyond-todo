@@ -3,6 +3,7 @@ import { MdDelete } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 
 export default function Task(props) {
+	const [isHovered, setIsHovered] = useState(false);
 	function deleteLocalTask(index) {
 		const updatedTasks = [...props.tasks];
 		updatedTasks.splice(index, 1);
@@ -17,10 +18,10 @@ export default function Task(props) {
 		setEditIndex(index);
 	}
 
-	const [isHovered, setIsHovered] = useState(false);
-
 	return (
-		<div className=" flex items-end relative">
+		<div className=" flex items-end relative max-w-[40em] mx-auto">
+			<div className=" legs absolute -left-8 h-8 w-12 border-solid border-border border-l-borderThickness2 border-t-borderThickness2 rounded-tl-md  border-bug l-4 t-0 "></div>
+			<div className=" legs absolute -right-8 h-8 w-12  border-solid border-border border-r-borderThickness2 border-t-borderThickness2 border-bug l-4 t-0 rounded-tr-md"></div>
 			<li
 				key={props.tasks}
 				onMouseEnter={() => setIsHovered(true)}
@@ -48,8 +49,6 @@ export default function Task(props) {
 					) : null}
 				</div>
 			</li>
-			<div className=" legs absolute -left-8 h-8 w-12 border-solid border-border border-l-borderThickness2 border-t-borderThickness2 rounded-tl-md  border-bug l-4 t-0 "></div>
-			<div className=" legs absolute -right-8 h-8 w-12  border-solid border-border border-r-borderThickness2 border-t-borderThickness2 border-bug l-4 t-0 rounded-tr-md"></div>
 		</div>
 	);
 }

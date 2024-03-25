@@ -38,7 +38,31 @@ export default function Main() {
 			setTasks(tasks);
 		}
 		fetchTasks();
+
+		const intervalID = setInterval(legsMoving, 20000);
+		return () => clearInterval(intervalID);
 	}, []);
+
+
+	
+	function legsMoving() {
+		anime({
+			targets: ".legs",
+			marginLeft: [
+				{ value: ".5em", easing: "easeOutSine", duration: 200 },
+				{ value: "0", easing: "easeInOutQuad", duration: 200 },
+				{ value: ".5em", easing: "easeOutSine", duration: 200 },
+				{ value: "0", easing: "easeInOutQuad", duration: 200 },
+			],
+			marginRight: [
+				{ value: ".5em", easing: "easeOutSine", duration: 200 },
+				{ value: "0", easing: "easeInOutQuad", duration: 200 },
+				{ value: ".5em", easing: "easeOutSine", duration: 200 },
+				{ value: "0", easing: "easeInOutQuad", duration: 200 },
+			],
+			delay: anime.stagger(60, { grid: [20, 20], from: "center" }),
+		});
+	}
 
 	return (
 		<main className=" bg-main w-full h-screen  bg-bg overflow-hidden">
@@ -86,7 +110,7 @@ export default function Main() {
 
 				{/* body */}
 				<div className=" mx-auto w-full overflow-scroll pb-16 h-[68vh] px-10 ">
-					<ul className="text-left max-w-[40em] mx-auto">
+					<ul className="text-left mx-auto">
 						{tasks
 							? tasks.map((tasks, index) => (
 									<Task index={index} tasks={tasks} />
