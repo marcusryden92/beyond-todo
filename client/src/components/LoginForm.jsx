@@ -10,7 +10,7 @@ export default function LoginForm() {
   const loginPassword = useRef();
   const loginUsername = useRef();
 
-  const { setStatus } = myContext();
+  const { setStatus, badCredentials, setBadCredentials } = myContext();
 
   const navigate = useNavigate();
 
@@ -50,6 +50,9 @@ export default function LoginForm() {
           placeholder="Password"
           className="w-full p-2 bg-bg  border-bug border-solid border-b-4"
         />
+{badCredentials ? (
+          <div className="text-red-500">Wrong username or password.</div>
+        ) : null}
         <button
           onClick={(e) => {
             handleLogin(
@@ -57,7 +60,8 @@ export default function LoginForm() {
               loginUsername.current.value,
               loginPassword.current.value,
               setStatus,
-              navigate
+              navigate,
+              setBadCredentials
             );
           }}
           type="submit"

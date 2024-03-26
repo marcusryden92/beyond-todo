@@ -32,7 +32,8 @@ export default function RegisterForm() {
         registerPassword.current.value,
         navigate,
         handleLogin,
-        setStatus
+        setStatus,
+        setDisplayError
       );
     }
   }
@@ -81,7 +82,7 @@ export default function RegisterForm() {
         >
           Sign up
         </button>
-
+      <div className="text-red-500">{displayError}</div>
         <p className="text-bug">
           Already a member?{" "}
           <Link to="/" className="text-eyes hover:underline">

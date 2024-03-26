@@ -4,7 +4,8 @@ export async function handleCreateUser(
   password,
   navigate,
   handleLogin,
-  setStatus
+  setStatus,
+  setDisplayError
 ) {
   const userData = {
     username: name,
@@ -19,6 +20,11 @@ export async function handleCreateUser(
       },
       body: JSON.stringify(userData),
     });
+
+    if (response.status === 409) {
+      setDisplayError("username taken");
+      return;
+    }
     const json = await response.json();
     console.log("Data updated successfully:", json);
     handleLogin(e, name, password, setStatus, navigate);
