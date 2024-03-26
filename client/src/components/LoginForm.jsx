@@ -9,7 +9,7 @@ export default function LoginForm() {
   const loginPassword = useRef();
   const loginUsername = useRef();
 
-  const { setStatus } = myContext();
+  const { setStatus, badCredentials, setBadCredentials } = myContext();
 
   const navigate = useNavigate();
 
@@ -53,6 +53,9 @@ export default function LoginForm() {
             className="w-full px-4 py-2 mt-2 bg-gray-200 rounded-lg focus:ring-pink-500 focus:border-pink-500"
           />
         </div>
+        {badCredentials ? (
+          <div className="text-red-500">Wrong username or password.</div>
+        ) : null}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <input type="checkbox" id="rememberMe" className="mr-2" />
@@ -61,6 +64,7 @@ export default function LoginForm() {
             </label>
           </div>
         </div>
+
         <button
           onClick={(e) => {
             handleLogin(
@@ -68,7 +72,8 @@ export default function LoginForm() {
               loginUsername.current.value,
               loginPassword.current.value,
               setStatus,
-              navigate
+              navigate,
+              setBadCredentials
             );
           }}
           type="submit"

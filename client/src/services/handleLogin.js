@@ -1,4 +1,11 @@
-export async function handleLogin(e, name, password, setStatus, navigate) {
+export async function handleLogin(
+  e,
+  name,
+  password,
+  setStatus,
+  navigate,
+  setBadCredentials
+) {
   e.preventDefault();
 
   const userData = {
@@ -19,7 +26,11 @@ export async function handleLogin(e, name, password, setStatus, navigate) {
     const json = await response.json();
     console.log("Data updated successfully:", json);
     setStatus(response.status);
-    navigate(`/main/${name}`);
+    if (response.ok) {
+      navigate(`/main/${name}`);
+    } else {
+      setBadCredentials(true);
+    }
   } catch (err) {
     console.error("Error updating data:", err);
   }

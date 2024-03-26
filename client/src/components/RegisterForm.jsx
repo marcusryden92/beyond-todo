@@ -10,7 +10,7 @@ export default function RegisterForm() {
   const registerPassword = useRef();
   const registerUsername = useRef();
 
-  const { setStatus } = myContext();
+  const { setStatus, setBadCredentials } = myContext();
 
   const [displayError, setDisplayError] = useState("");
   const navigate = useNavigate();
@@ -31,7 +31,8 @@ export default function RegisterForm() {
         registerPassword.current.value,
         navigate,
         handleLogin,
-        setStatus
+        setStatus,
+        setBadCredentials
       );
     }
   }

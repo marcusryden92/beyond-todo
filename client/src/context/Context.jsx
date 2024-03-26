@@ -4,12 +4,15 @@ export const ContextProvider = createContext(null);
 export const Context = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [status, setStatus] = useState();
+  const [badCredentials, setBadCredentials] = useState(false);
 
   const value = {
     status,
     setStatus,
     tasks,
     setTasks,
+    badCredentials,
+    setBadCredentials,
   };
 
   return (
