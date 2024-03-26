@@ -15,8 +15,8 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route index element={<Login />} />
+          <Route path="/signup" element={<RegisterForm />} />
           <Route element={<PrivateRoutes />}>
-            <Route path="/signup" element={<RegisterForm />} />
             <Route path="/main/:user" element={<Main />} />
           </Route>
         </Routes>
