@@ -21,7 +21,6 @@ export default function Main() {
     return () => clearInterval(intervalID);
   }, []);
 
-
   function handleAdd() {
     if (taskInput.current.value) {
       const newTask = taskInput.current.value.trim();
@@ -31,7 +30,7 @@ export default function Main() {
   }
 
   async function handleLogout() {
-    const url = "http://localhost:3000/logout";
+    const url = "https://beyond-todo-server.vercel.app/logout";
 
     try {
       const res = await fetch(url, {
@@ -115,7 +114,9 @@ export default function Main() {
         <div className=" mx-auto w-full overflow-scroll pb-16 h-[68vh] px-10 ">
           <ul className="text-left mx-auto">
             {tasks
-              ? tasks.map((task, index) => <Task key={index} index={index} task={task} />)
+              ? tasks.map((task, index) => (
+                  <Task key={index} index={index} task={task} />
+                ))
               : ""}
           </ul>
           <div className=" mx-auto bg-bug p-4 rounded-bl-[4em] rounded-br-[4em] flex justify-center border-solid border-t-2 border-bugSecondary max-w-[40em]">
