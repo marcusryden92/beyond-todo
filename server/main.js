@@ -11,8 +11,6 @@ const {
   getTasks,
   editTask,
 } = require("./handlers"); // Importing handlers
-const { setupRouting } = require("./express");
-const pool = require("./db");
 
 const bodyParser = require("body-parser");
 // const cookieParser = require("cookie-parser");
