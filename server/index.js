@@ -29,7 +29,7 @@ const { v4: uuidv4 } = require("uuid");
 
 // Middlewears
 app.use(
-  cors({ credentials: true, origin: "https://beyond-todo-client.vercel.app" })
+  cors({ credentials: true, origin: "https://beyond-todo-server.vercel.app" })
 );
 //CHECK IF NEEDED WHEN DEPLOYED
 app.use(bodyParser.json());
