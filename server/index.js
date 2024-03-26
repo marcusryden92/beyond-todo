@@ -216,3 +216,5 @@ app.get("/tasks", isAuth, async (req, res) => {
 // setupRouting(app, createTask, readTasks);
 
 app.listen(port, () => console.log(`Listening on port ${port}....`));
+
+module.export = app;
