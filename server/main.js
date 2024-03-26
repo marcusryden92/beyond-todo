@@ -40,7 +40,7 @@ app.use(
     saveUninitialized: true,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24,
-      secure: false,
+      secure: true,
       sameSite: "lax",
     }, //never do this in prod, however localhost has no https
   })
