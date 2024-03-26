@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@font-face {
+	font-family: todo;
+	src: url("./assets/Righteous-Regular.ttf");
+}
+
+@font-face {
+	font-family: mont;
+	src: url("./assets/Montserrat-Variable.ttf");
+}
+
+
+
+.font-todo {
+	font-family: todo;
+}
+
+.font-mont {
+	font-family: mont;
+}
+
+
+* {
+	font-family: mont;
+}
+
