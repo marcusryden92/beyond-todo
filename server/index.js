@@ -210,7 +210,7 @@ app.post("/logout", (req, res) => {
 });
 
 // Getting User
-app.get("/tasks", isAuth, async (req, res) => {
+app.get("/tasks", async (req, res) => {
   const user_id = req.user.user_id;
   const tasks = await getTasks(user_id);
   res.json(tasks);
