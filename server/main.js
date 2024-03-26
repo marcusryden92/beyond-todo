@@ -42,7 +42,7 @@ app.use(
       maxAge: 1000 * 60 * 60 * 24,
       secure: true,
       sameSite: "lax",
-    }, //never do this in prod, however localhost has no https
+    },
   })
 );
 
