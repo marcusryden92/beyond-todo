@@ -4,13 +4,13 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
-				bg: "#CCC8B6",
+				bg: "#E2E0D6",
 				bug: "#304980",
 				bugLegs: "black",
 				bugSecondary: "#3B5A9E",
 				accent: "#3E4820",
 				eyes: "#D22D2E",
-                text: "#CCC8B6",
+                text: "#EBEAE3",
 			},
 			borderWidth: {
 				borderThickness: "1em",
