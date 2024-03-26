@@ -28,7 +28,7 @@ const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 
 // Middlewears
-app.use(cors({ credentials: true, origin: "http://localhost:5173" })); //CHECK IF NEEDED WHEN DEPLOYED
+app.use(cors()); //CHECK IF NEEDED WHEN DEPLOYED
 app.use(bodyParser.json());
 
 // Setting up & initializing session and initializing passport
