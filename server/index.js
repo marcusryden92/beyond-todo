@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const port = process.env.PORT || 3000;
+// const port = process.env.PORT || 3000;
 
 const {
   createTask,
@@ -46,15 +46,11 @@ app.use(
   })
 );
 
-// MARCUS logging function.
-app.use((req, res, next) => {
-  next();
-});
-
 app.use(passport.initialize());
 app.use(passport.session());
 
 function isAuth(req, res, next) {
+  console.log("Authenticating....");
   if (req.isAuthenticated()) {
     return next();
   }
