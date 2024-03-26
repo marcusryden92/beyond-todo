@@ -10,7 +10,7 @@ export default function RegisterForm() {
   const registerPassword = useRef();
   const registerUsername = useRef();
 
-  const { setStatus, setBadCredentials } = myContext();
+  const { setStatus } = myContext();
 
   const [displayError, setDisplayError] = useState("");
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ export default function RegisterForm() {
         navigate,
         handleLogin,
         setStatus,
-        setBadCredentials
+        setDisplayError
       );
     }
   }
@@ -59,19 +59,7 @@ export default function RegisterForm() {
           ref={registerPassword}
         />
       </div>
-      {displayError === "short username" ? (
-        <div className="text-red-500">
-          Username needs to be at least 3 characters!
-        </div>
-      ) : null}
-      {displayError === "short password" ? (
-        <div className="text-red-500">
-          Password needs to be at least 5 characters long!
-        </div>
-      ) : null}
-      {displayError === "bad characters" ? (
-        <div className="text-red-500">Username has weird characters!</div>
-      ) : null}
+      <div className="text-red-500">{displayError}</div>
 
       <button
         onClick={(e) => {
