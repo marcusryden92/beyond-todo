@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { handleLogin } from "../services/handleLogin";
 import { myContext } from "../context/Context";
+import { Link } from "react-router-dom";
 
 import { handleCreateUser } from "../services/handleCreateUser";
 import { validateCredentials } from "../services/validateCredentials";
@@ -37,55 +38,57 @@ export default function RegisterForm() {
   }
 
   return (
-    <form className="max-w-md mx-auto bg-white p-14 rounded-lg text-center shadow-lg">
-      <div className="mb-4">
-        <label htmlFor="username" className="block text-gray-700">
-          Username
-        </label>
+    <div className=" w-full h-screen bg-bg pt-20">
+      <form className="max-w-md mx-auto bg-bg p-8 rounded-lg text-center grid gap-4">
+        <h1 className="block text-bug font-todo uppercase text-5xl mb-4">
+          sign up
+        </h1>
         <input
-          type="text"
-          className="w-full px-4 py-2 mt-2 bg-gray-200 rounded-lg focus:ring-violet-500 focus:border-violet-500"
           ref={registerUsername}
+          id="name"
+          type="text"
+          placeholder="Username"
+          className="w-full p-2  bg-bg  border-bug border-solid border-b-4 "
         />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="password" className="block text-gray-700">
-          Password
-        </label>
-        <input
-          type="password"
-          className="w-full px-4 py-2 mt-2 bg-gray-200 rounded-lg focus:ring-violet-500 focus:border-violet-500"
-          ref={registerPassword}
-        />
-      </div>
-      {displayError === "short username" ? (
-        <div className="text-red-500">
-          Username needs to be at least 3 characters!
-        </div>
-      ) : null}
-      {displayError === "short password" ? (
-        <div className="text-red-500">
-          Password needs to be at least 5 characters long!
-        </div>
-      ) : null}
-      {displayError === "bad characters" ? (
-        <div className="text-red-500">Username has weird characters!</div>
-      ) : null}
 
-      <button
-        onClick={(e) => {
-          handleClickRegister(e);
-        }}
-        className="w-full py-2 mt-10 mb-4 bg-pink-500 hover:bg-pink-400 text-white font-semibold rounded-lg shadow-lg"
-      >
-        SIGN UP
-      </button>
-      {/* <p>
-        Already a member?{" "}
-        <Link to="/" className="text-pink-500 hover:underline">
-          Log in
-        </Link>
-      </p> */}
-    </form>
+        <input
+          ref={registerPassword}
+          id="password"
+          type="password"
+          placeholder="Password"
+          className="w-full p-2 bg-bg  border-bug border-solid border-b-4"
+        />
+        {displayError === "short username" ? (
+          <div className="text-red-500">
+            Username needs to be at least 3 characters!
+          </div>
+        ) : null}
+        {displayError === "short password" ? (
+          <div className="text-red-500">
+            Password needs to be at least 5 characters long!
+          </div>
+        ) : null}
+        {displayError === "bad characters" ? (
+          <div className="text-red-500">Username has weird characters!</div>
+        ) : null}
+
+        <button
+          onClick={(e) => {
+            handleClickRegister(e);
+          }}
+          type="submit"
+          className="w-full py-2 rounded-full font-semibold bg-bug hover:brightness-125 transition duration-200 text-text font-todo mt-8"
+        >
+          Sign up
+        </button>
+
+        <p className="text-bug">
+          Already a member?{" "}
+          <Link to="/" className="text-eyes hover:underline">
+            Log in!
+          </Link>
+        </p>
+      </form>
+    </div>
   );
 }

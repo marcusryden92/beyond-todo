@@ -2,11 +2,16 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import {
   getTasks,
-  deleteTask,
-  editTask,
   addTask,
+  editTask,
+  deleteTask,
 } from "../services/useTasksApi";
 import { useNavigate } from "react-router-dom";
+import { IoMdAdd } from "react-icons/io";
+import anime from "animejs";
+import { MdDelete } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
+import { FaCheck } from "react-icons/fa";
 
 export default function Main() {
   const navigate = useNavigate();
@@ -16,10 +21,14 @@ export default function Main() {
   const username = param.user;
   const [editingTask, setEditingTask] = useState(false);
   const [editTaskIndex, setEditTaskIndex] = useState(null);
+  const [isHovered, setIsHovered] = useState(false);
   const taskInput = useRef();
 
   useEffect(() => {
     fetchTasks();
+
+    const intervalID = setInterval(legsMoving, 20000);
+    return () => clearInterval(intervalID);
   }, []);
 
   async function fetchTasks() {
@@ -46,6 +55,7 @@ export default function Main() {
     setEditingTask((prev) => !prev);
     const editedTask = taskInput.current.value;
     editTask(tasks[editTaskIndex].task_id, fetchTasks, editedTask);
+    taskInput.current.value = "";
   }
 
   async function handleLogout() {
@@ -71,73 +81,132 @@ export default function Main() {
     }
   }
 
+  function legsMoving() {
+    anime({
+      targets: ".legs",
+      marginLeft: [
+        { value: ".5em", easing: "easeOutSine", duration: 200 },
+        { value: "0", easing: "easeInOutQuad", duration: 200 },
+        { value: ".5em", easing: "easeOutSine", duration: 200 },
+        { value: "0", easing: "easeInOutQuad", duration: 200 },
+      ],
+      marginRight: [
+        { value: ".5em", easing: "easeOutSine", duration: 200 },
+        { value: "0", easing: "easeInOutQuad", duration: 200 },
+        { value: ".5em", easing: "easeOutSine", duration: 200 },
+        { value: "0", easing: "easeInOutQuad", duration: 200 },
+      ],
+      delay: anime.stagger(60, { grid: [20, 20], from: "center" }),
+    });
+  }
+
   return (
-    <div className="max-w-md mx-auto bg-white text-black p-8 rounded-lg text-center shadow-lg">
-      <h2 className="text-2xl font-semibold mb-4">
-        Hello {username}, you have {tasks.length}{" "}
-        {tasks.length === 1 ? "task" : "tasks"}
-      </h2>
-      <div className="mb-4">
-        <input
-          type="text"
-          className="w-full px-4 py-2 mt-2 bg-gray-200 rounded-lg focus:ring-violet-500 focus:border-violet-500"
-          placeholder="Enter your todo"
-          ref={taskInput}
-        />
-      </div>
-      <div>
-        {editingTask ? (
-          <button
-            onClick={handleEdit}
-            className="w-full py-2 mb-4 bg-pink-500 hover:bg-pink-400 text-white font-semibold rounded-lg shadow-lg"
-          >
-            UPDATE TODO
-          </button>
-        ) : (
-          <button
-            onClick={handleAdd}
-            className="w-full py-2 mb-4 bg-pink-500 hover:bg-pink-400 text-white font-semibold rounded-lg shadow-lg"
-          >
-            ADD TODO
-          </button>
-        )}
-      </div>
-      <ul className="text-left">
-        {tasks
-          ? tasks.map((task, index) => (
-              <li
-                key={index}
-                className="flex justify-between items-center py-2 border-b border-gray-200"
-              >
-                <span>{task.task}</span>
-                <div>
+    <main className=" bg-main w-full h-screen  bg-bg overflow-hidden">
+      <div className=" mx-auto ">
+        <div className=" mx-auto max-w-[45em] pt-6  px-10 ">
+          {/* antennas */}
+          <div className="flex justify-between -mx-4 h-16 -mb-4">
+            <div className=" w-[20%]  border-solid border-border border-r-borderThickness border-t-borderThickness border-bug rounded-tr-lg"></div>
+            <div className=" w-[20%]  border-solid border-border border-l-borderThickness border-t-borderThickness rounded-tl-lg  border-bug"></div>
+          </div>
+
+          {/* head */}
+          <div className=" bg-bug rounded-tl-[4em] rounded-tr-[4em] flex items-center  border-b-0 overflow-hidden text-text py-4">
+            <div className=" w-[3em] bg-eyes h-[6em] rounded-tr-full rounded-br-full"></div>
+            <div className=" mx-auto p-4 w-[80%] text-center">
+              <h1 className="text-3xl sm:text-6xl font-extrabold uppercase font-todo tracking-wider">
+                {username}
+              </h1>
+              <p className=" text-base sm:text-xl font-bold mb-4 uppercase">
+                You have a {tasks.length}ipede
+              </p>
+              <div className="flex rounded-full overflow-hidden">
+                <input
+                  type="text"
+                  placeholder="Add something todo for a longer-pede"
+                  ref={taskInput}
+                  className=" text-sm sm:text-base flex-1 px-4 py-2 bg-bugSecondary h-full "
+                />
+                {editingTask ? (
                   <button
-                    onClick={() => {
-                      handleEditTask(index);
-                      setEditingTask((prev) => !prev);
-                      setEditTaskIndex(index);
-                    }}
-                    className="text-blue-500 hover:text-blue-700 mr-2"
+                    onClick={handleEdit}
+                    className=" bg-bugSecondary brightness-110 w-10 flex justify-center items-center"
                   >
-                    Edit
+                    <FaCheck />
                   </button>
+                ) : (
                   <button
-                    onClick={() => handleDelete(index)}
-                    className="text-pink-500 hover:text-pink-700 mr-2"
+                    onClick={handleAdd}
+                    className=" bg-bugSecondary brightness-110 w-10 flex justify-center items-center"
                   >
-                    Remove
+                    <IoMdAdd />
                   </button>
-                </div>
-              </li>
-            ))
-          : ""}
-      </ul>
-      <button
-        onClick={handleLogout}
-        className="w-full py-2 bg-red-500 hover:bg-red-400 text-white font-semibold rounded-lg shadow-lg"
-      >
-        LOG OUT
-      </button>
-    </div>
+                )}
+              </div>
+            </div>
+            <div className=" w-[3em] bg-eyes h-[6em] rounded-tl-full rounded-bl-full"></div>
+          </div>
+        </div>
+
+        {/* body */}
+        <div className=" mx-auto w-full overflow-scroll pb-16 h-[68vh] px-10 ">
+          <ul className="text-left mx-auto">
+            {tasks
+              ? tasks.map((task, index) => (
+                  <div className=" flex items-end relative max-w-[40em] mx-auto">
+                    <div className=" legs absolute -left-8 h-8 w-12 border-solid border-border border-l-borderThickness2 border-t-borderThickness2 rounded-tl-md  border-bug l-4 t-0 "></div>
+                    <div className=" legs absolute -right-8 h-8 w-12  border-solid border-border border-r-borderThickness2 border-t-borderThickness2 border-bug l-4 t-0 rounded-tr-md"></div>
+                    <li
+                      key={index}
+                      onMouseEnter={() => setIsHovered(true)}
+                      onMouseLeave={() => setIsHovered(false)}
+                      style={{
+                        filter: isHovered
+                          ? "brightness(110%)"
+                          : "brightness(100%)",
+                      }}
+                      className=" flex justify-between items-center py-2 pl-6 border-solid border-t-2 border-y-bugSecondary  relative w-full bg-bug h-[3em] transition duration-200 overflow-hidden"
+                    >
+                      <span className=" w-[80%] text-text font-semibold ">
+                        {task.task}
+                      </span>
+                      <div className=" pr-3 flex">
+                        {isHovered ? (
+                          <>
+                            <button
+                              onClick={() => {
+                                handleEditTask(index);
+                                setEditingTask((prev) => !prev);
+                                setEditTaskIndex(index);
+                              }}
+                              className="bg-bg w-[2em] h-[2em] mr-2 rounded-full hover:bg-blue-400  transition duration-200 flex justify-center items-center "
+                            >
+                              <MdEdit />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(index)}
+                              className="bg-bg  w-[2em] h-[2em] mr-2 rounded-full hover:bg-eyes hover:text-bg transition duration-200 flex justify-center items-center"
+                            >
+                              <MdDelete />
+                            </button>
+                          </>
+                        ) : null}
+                      </div>
+                    </li>
+                  </div>
+                ))
+              : ""}
+          </ul>
+          <div className=" mx-auto bg-bug p-4 rounded-bl-[4em] rounded-br-[4em] flex justify-center border-solid border-t-2 border-bugSecondary max-w-[40em]">
+            <button
+              onClick={handleLogout}
+              className=" py-2 text-text font-semibold rounded-full bg-bugSecondary  hover:bg-eyes hover:text-bg transition duration-200 px-4"
+            >
+              LOG OUT
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }

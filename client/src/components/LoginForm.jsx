@@ -2,6 +2,7 @@ import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { handleLogin } from "../services/handleLogin";
 import { myContext } from "../context/Context";
+import { Link } from "react-router-dom";
 
 import { checkSession } from "../services/checkSession";
 
@@ -29,38 +30,26 @@ export default function LoginForm() {
   }, []);
 
   return (
-    <>
-      <form className="max-w-md mx-auto bg-white p-14 rounded-lg text-center shadow-lg">
-        <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-700">
-            Name
-          </label>
-          <input
-            ref={loginUsername}
-            type="text"
-            placeholder="Enter your name"
-            className="w-full px-4 py-2 mt-2 bg-gray-200 rounded-lg focus:ring-pink-500 focus:border-pink-500"
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="password" className="block text-gray-700">
-            Password
-          </label>
-          <input
-            ref={loginPassword}
-            type="password"
-            placeholder="Enter your password"
-            className="w-full px-4 py-2 mt-2 bg-gray-200 rounded-lg focus:ring-pink-500 focus:border-pink-500"
-          />
-        </div>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center">
-            <input type="checkbox" id="rememberMe" className="mr-2" />
-            <label htmlFor="rememberMe" className="text-gray-700">
-              Remember me
-            </label>
-          </div>
-        </div>
+    <div className=" w-full h-screen bg-bg pt-20">
+      <form className="max-w-md mx-auto bg-bg p-8 rounded-lg text-center grid gap-4">
+        <h1 className="block text-bug font-todo uppercase text-5xl mb-4">
+          Log in
+        </h1>
+        <input
+          ref={loginUsername}
+          id="name"
+          type="text"
+          placeholder="Username"
+          className="w-full p-2  bg-bg  border-bug border-solid border-b-4 "
+        />
+
+        <input
+          ref={loginPassword}
+          id="password"
+          type="password"
+          placeholder="Password"
+          className="w-full p-2 bg-bg  border-bug border-solid border-b-4"
+        />
         <button
           onClick={(e) => {
             handleLogin(
@@ -72,11 +61,17 @@ export default function LoginForm() {
             );
           }}
           type="submit"
-          className="w-full py-2 mb-4 bg-pink-500 hover:bg-pink-400 text-white font-semibold rounded-lg shadow-lg"
+          className="w-full py-2 rounded-full font-semibold bg-bug hover:brightness-125 transition duration-200 text-text font-todo mt-8"
         >
-          Login
+          Log in
         </button>
+        <p className="text-bug">
+          Not a member?{" "}
+          <Link to="/signup" className="text-eyes hover:underline">
+            Sign up!
+          </Link>
+        </p>
       </form>
-    </>
+    </div>
   );
 }

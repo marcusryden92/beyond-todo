@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Main from "./pages/Main";
+import RegisterForm from "./components/RegisterForm";
 
 export default function App() {
   const [data, setData] = useState(null);
@@ -51,6 +52,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route index element={<Login />} />
+        <Route path="/signup" element={<RegisterForm />} />
         <Route path="/main/:user" element={<Main />} />
       </Routes>
     </BrowserRouter>
