@@ -30,23 +30,10 @@ const { v4: uuidv4 } = require("uuid");
 // // Middlewears
 // app.use(cors({ credentials: true, origin: true }));
 
-// Allow requests from specific origins
-const allowedOrigins = [
-  "https://beyond-todo-client.vercel.app",
-  // Add any other origins that should be allowed to access the server
-];
-
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Check if the origin is allowed or if it is undefined (no origin, same-origin)
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true, // Allow cookies to be sent along with requests
+    origin: "https://beyond-todo-client.vercel.app/",
+    credentials: true,
   })
 );
 
