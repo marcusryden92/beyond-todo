@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-// const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 const {
   createTask,
@@ -27,38 +27,37 @@ const bcrypt = require("bcrypt");
 // Generate random userId: --ADDED BY MARCUS
 const { v4: uuidv4 } = require("uuid");
 
-// // Middlewears
-// app.use(cors({ credentials: true, origin: true }));
-
+// Middlewears
 app.use(
-  cors({
-    origin: "https://beyond-todo-client.vercel.app/",
-    credentials: true,
-  })
+  cors({ credentials: true, origin: "https://beyond-todo-client.vercel.app" })
 );
-
 //CHECK IF NEEDED WHEN DEPLOYED
 app.use(bodyParser.json());
 
 // Setting up & initializing session and initializing passport
 app.use(
   session({
+    cookie: { secure: false },
     secret: "secret",
     resave: false,
     saveUninitialized: true,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24,
-      secure: true, // Set this to true if you're using HTTPS
-      sameSite: "none",
+      secure: true,
+      sameSite: "lax",
     },
   })
 );
+
+// MARCUS logging function.
+app.use((req, res, next) => {
+  next();
+});
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 function isAuth(req, res, next) {
-  console.log("Authenticating....");
   if (req.isAuthenticated()) {
     return next();
   }
@@ -211,7 +210,7 @@ app.post("/logout", (req, res) => {
 });
 
 // Getting User
-app.get("/tasks", async (req, res) => {
+app.get("/tasks", isAuth, async (req, res) => {
   const user_id = req.user.user_id;
   const tasks = await getTasks(user_id);
   res.json(tasks);
