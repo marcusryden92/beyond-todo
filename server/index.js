@@ -61,7 +61,7 @@ app.use(
     saveUninitialized: true,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24,
-      secure: false, // Set this to true if you're using HTTPS
+      secure: true, // Set this to true if you're using HTTPS
       sameSite: "lax",
     },
   })
