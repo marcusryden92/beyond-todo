@@ -28,7 +28,9 @@ const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 
 // Middlewears
-app.use(cors()); //CHECK IF NEEDED WHEN DEPLOYED
+app.use(
+  cors({ credentials: true, origin: "https://beyond-todo-server.vercel.app/" })
+); //CHECK IF NEEDED WHEN DEPLOYED
 app.use(bodyParser.json());
 
 // Setting up & initializing session and initializing passport
@@ -40,7 +42,7 @@ app.use(
     saveUninitialized: true,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24,
-      secure: true,
+      secure: false,
       sameSite: "lax",
     },
   })
