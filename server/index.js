@@ -61,6 +61,7 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(passport.initialize());
 
 // Middlewears
 app.use(
