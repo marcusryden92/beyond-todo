@@ -32,12 +32,10 @@ passport.use(strategy);
 
 // Hexadecimal things
 passport.serializeUser((user, callback) => {
-  console.log("SERIAL", user);
   callback(null, user);
 });
 
 passport.deserializeUser(async (user, callback) => {
-  console.log("DESERIAL", user);
   callback(null, user);
 });
 
@@ -45,8 +43,7 @@ passport.deserializeUser(async (user, callback) => {
 app.use(
   cors({
     credentials: true,
-    //origin: "https://beyond-todo-client.vercel.app",
-    origin: "*",
+    origin: "https://beyond-todo-client.vercel.app",
     allowedHeaders: "*",
     methods: "*",
   })
