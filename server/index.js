@@ -119,25 +119,32 @@ app.post("/register", async (req, res) => {
 });
 
 // Login path + Authenticating a user
-app.post("/login", (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json("Server error during login.");
-    }
-    if (!user) {
-      return res.status(401).json("Invalid username or password.");
-    }
-    req.logIn(user, function (err) {
-      if (err) {
-        console.error(err);
-        return res.status(500).json("Server error during login.");
-      }
-      console.log("Successful login for: " + req.user.username);
-      return res.json("Welcome " + req.user.username);
-    });
-  })(req, res, next);
-});
+// app.post("/login", (req, res, next) => {
+//   passport.authenticate("local", (err, user, info) => {
+//     if (err) {
+//       console.error(err);
+//       return res.status(500).json("Server error during login.");
+//     }
+//     if (!user) {
+//       return res.status(401).json("Invalid username or password.");
+//     }
+//     req.logIn(user, function (err) {
+//       if (err) {
+//         console.error(err);
+//         return res.status(500).json("Server error during login.");
+//       }
+//       console.log("Successful login for: " + req.user.username);
+//       return res.json("Welcome " + req.user.username);
+//     });
+//   })(req, res, next);
+// });
+
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    successReturnToOrRedirect: "/",
+  })
+);
 
 // Getting Session
 app.get("/session", (req, res) => {
