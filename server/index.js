@@ -21,6 +21,7 @@ const {
 
 // Setting upp passport
 function verificationCallback(username, password, callback) {
+  console.log("verify", username, password);
   return callback(null, { a: 1 });
 
   // const user = await findUserByUsername(username);
@@ -42,10 +43,12 @@ passport.use(strategy);
 
 // Hexadecimal things
 passport.serializeUser((user, callback) => {
+  console.log("serialize", user);
   callback(null, user);
 });
 
 passport.deserializeUser(async (user, callback) => {
+  console.log("deserialize", user);
   callback(null, user);
 });
 
@@ -120,12 +123,7 @@ app.post("/register", async (req, res) => {
 });
 
 // Login path + Authenticating a user
-app.post(
-  "/login",
-  passport.authenticate("local", {
-    failureMessage: "you cant, no",
-  })
-);
+app.post("/login", passport.authenticate("local"));
 
 // Getting Session
 app.get("/session", (req, res) => {
