@@ -22,7 +22,7 @@ const {
 // Setting upp passport
 function verificationCallback(username, password, callback) {
   console.log("verify", username, password);
-  return callback(null, { a: 1 });
+  return callback(null, { username });
 
   // const user = await findUserByUsername(username);
 
@@ -44,7 +44,7 @@ passport.use(strategy);
 // Hexadecimal things
 passport.serializeUser((user, callback) => {
   console.log("serialize", user);
-  callback(null, user);
+  callback(null, "superSafeb64String");
 });
 
 passport.deserializeUser(async (user, callback) => {
