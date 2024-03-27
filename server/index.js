@@ -21,6 +21,8 @@ const {
 
 // Setting upp passport
 async function verificationCallback(username, password, callback) {
+  return callback(null, { a: 1 });
+
   const user = await findUserByUsername(username);
 
   if (!user) {
@@ -80,7 +82,6 @@ app.use(
   })
 );
 
-app.use(passport.session());
 app.use(passport.authenticate("session"));
 
 function isAuth(req, res, next) {
@@ -119,25 +120,12 @@ app.post("/register", async (req, res) => {
 });
 
 // Login path + Authenticating a user
-app.post("/login", (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json("Server error during login.");
-    }
-    if (!user) {
-      return res.status(401).json("Invalid username or password.");
-    }
-    req.logIn(user, function (err) {
-      if (err) {
-        console.error(err);
-        return res.status(500).json("Server error during login.");
-      }
-      console.log("Successful login for: " + req.user.username);
-      return res.json("Welcome " + req.user.username);
-    });
-  })(req, res, next);
-});
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    failureMessage: "you cant, no",
+  })
+);
 
 // Getting Session
 app.get("/session", (req, res) => {
