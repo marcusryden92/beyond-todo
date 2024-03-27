@@ -20,21 +20,21 @@ const {
 //==========================================
 
 // Setting upp passport
-async function verificationCallback(username, password, callback) {
+function verificationCallback(username, password, callback) {
   return callback(null, { a: 1 });
 
-  const user = await findUserByUsername(username);
+  // const user = await findUserByUsername(username);
 
-  if (!user) {
-    return callback(null, false, { message: "No user exists" });
-  }
-  const matchedPassword = await bcrypt.compare(password, user.password);
+  // if (!user) {
+  //   return callback(null, false, { message: "No user exists" });
+  // }
+  // const matchedPassword = await bcrypt.compare(password, user.password);
 
-  if (!matchedPassword) {
-    return callback(null, false, { message: "Wrong password" });
-  }
+  // if (!matchedPassword) {
+  //   return callback(null, false, { message: "Wrong password" });
+  // }
 
-  return callback(null, user);
+  // return callback(null, user);
 }
 
 const strategy = new LocalStrategy(verificationCallback);
