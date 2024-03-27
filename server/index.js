@@ -61,22 +61,30 @@ function isAuth(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.status(401).json({ error: "Unauthorized" });
+
+  return res.status(401).json({ error: "Unauthorized" });
 }
 
 // Setting upp passport
 async function verificationCallback(username, password, callback) {
   const user = await findUserByUsername(username);
 
+  console.log("AAAAAAAAAAAAAA HELP");
+
   if (!user) {
+    console.log("AAAAAAAAAAAAAA HELP 2");
     return callback(null, false, { message: "No user exists" });
   }
+  console.log("AAAAAAAAAAAAAA HELP 3");
   const matchedPassword = await bcrypt.compare(password, user.password);
 
+  console.log("AAAAAAAAAAAAAA HELP 4");
   if (!matchedPassword) {
+    console.log("AAAAAAAAAAAAAA HELP 5");
     return callback(null, false, { message: "Wrong password" });
   }
 
+  console.log("AAAAAAAAAAAAAA HELP 6");
   return callback(null, user);
 }
 
