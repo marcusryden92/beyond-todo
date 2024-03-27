@@ -118,7 +118,16 @@ app.post("/register", async (req, res) => {
 });
 
 // Login path + Authenticating a user
-app.post("/login", passport.authenticate("local"));
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/",
+  })
+);
+
+app.get("/", (req, res) => {
+  res.end();
+});
 
 // Getting Session
 app.get("/session", (req, res) => {
