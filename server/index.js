@@ -43,8 +43,8 @@ app.use(
     saveUninitialized: true,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24,
-      secure: true,
-      sameSite: "lax",
+      secure: false,
+      sameSite: false,
     },
   })
 );
@@ -58,7 +58,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 function isAuth(req, res, next) {
-  console.log("ISAUTH", req.isAuthenticated());
+  console.log("ISAUTH", req.isAuthenticated(), req.user);
 
   if (req.isAuthenticated()) {
     return next();
