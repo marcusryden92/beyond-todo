@@ -1,5 +1,12 @@
-const express = require("express");
 const cors = require("cors");
+const bcrypt = require("bcrypt");
+const express = require("express");
+const passport = require("passport");
+const { v4: uuidv4 } = require("uuid");
+const bodyParser = require("body-parser");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
+const LocalStrategy = require("passport-local").Strategy;
 
 const {
   createTask,
@@ -10,20 +17,7 @@ const {
   editTask,
 } = require("./handlers"); // Importing handlers
 
-const bodyParser = require("body-parser");
-// const cookieParser = require("cookie-parser");
-// app.use(cookieParser());
-
-// Login & Session
-const session = require("express-session");
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-
-//Hashing & Encrypting
-const bcrypt = require("bcrypt");
-
-// Generate random userId: --ADDED BY MARCUS
-const { v4: uuidv4 } = require("uuid");
+//==========================================
 
 // Setting upp passport
 async function verificationCallback(username, password, callback) {
@@ -53,11 +47,16 @@ passport.deserializeUser(async (user, callback) => {
   callback(null, user);
 });
 
+//==========================================
+
 const app = express();
-const port = process.env.PORT || 3000;
+// const port = process.env.PORT || 3000;
 
 //CHECK IF NEEDED WHEN DEPLOYED
+app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(passport.authenticate("session"));
 
 // Middlewears
 app.use(
@@ -81,15 +80,6 @@ app.use(
     },
   })
 );
-app.use(passport.authenticate("session"));
-
-// MARCUS logging function.
-app.use((req, res, next) => {
-  next();
-});
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 function isAuth(req, res, next) {
   console.log("ISAUTH", req.isAuthenticated(), req.user);
