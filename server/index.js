@@ -56,8 +56,6 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(passport.session());
-app.use(passport.authenticate("session"));
 
 // Middlewears
 app.use(
@@ -81,6 +79,9 @@ app.use(
     },
   })
 );
+
+app.use(passport.session());
+app.use(passport.authenticate("session"));
 
 function isAuth(req, res, next) {
   console.log("ISAUTH", req.isAuthenticated(), req.user);
