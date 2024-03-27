@@ -1,7 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const app = express();
-const port = process.env.PORT || 3000;
 
 const {
   createTask,
@@ -27,6 +25,22 @@ const bcrypt = require("bcrypt");
 // Generate random userId: --ADDED BY MARCUS
 const { v4: uuidv4 } = require("uuid");
 
+// Setting upp passport
+async function verificationCallback(username, password, callback) {
+  const user = await findUserByUsername(username);
+
+  if (!user) {
+    return callback(null, false, { message: "No user exists" });
+  }
+  const matchedPassword = await bcrypt.compare(password, user.password);
+
+  if (!matchedPassword) {
+    return callback(null, false, { message: "Wrong password" });
+  }
+
+  return callback(null, user);
+}
+
 const strategy = new LocalStrategy(verificationCallback);
 passport.use(strategy);
 
@@ -39,6 +53,12 @@ passport.deserializeUser(async (user, callback) => {
   callback(null, user);
 });
 
+const app = express();
+const port = process.env.PORT || 3000;
+
+//CHECK IF NEEDED WHEN DEPLOYED
+app.use(bodyParser.json());
+
 // Middlewears
 app.use(
   cors({
@@ -47,8 +67,6 @@ app.use(
     methods: "GET,POST,PUT,DELETE,OPTIONS",
   })
 );
-//CHECK IF NEEDED WHEN DEPLOYED
-app.use(bodyParser.json());
 
 // Setting up & initializing session and initializing passport
 app.use(
@@ -63,6 +81,7 @@ app.use(
     },
   })
 );
+app.use(passport.authenticate("session"));
 
 // MARCUS logging function.
 app.use((req, res, next) => {
@@ -80,22 +99,6 @@ function isAuth(req, res, next) {
   }
 
   return res.status(401).json({ error: "Unauthorized" });
-}
-
-// Setting upp passport
-async function verificationCallback(username, password, callback) {
-  const user = await findUserByUsername(username);
-
-  if (!user) {
-    return callback(null, false, { message: "No user exists" });
-  }
-  const matchedPassword = await bcrypt.compare(password, user.password);
-
-  if (!matchedPassword) {
-    return callback(null, false, { message: "Wrong password" });
-  }
-
-  return callback(null, user);
 }
 
 // Register a new user
