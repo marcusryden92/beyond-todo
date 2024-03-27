@@ -27,9 +27,29 @@ const bcrypt = require("bcrypt");
 // Generate random userId: --ADDED BY MARCUS
 const { v4: uuidv4 } = require("uuid");
 
+const strategy = new LocalStrategy(verificationCallback);
+passport.use(strategy);
+
+// Hexadecimal things
+passport.serializeUser((user, callback) => {
+  console.log("SERIAL", user);
+  callback(null, user);
+});
+
+passport.deserializeUser(async (user, callback) => {
+  console.log("DESERIAL", user);
+  callback(null, user);
+});
+
 // Middlewears
 app.use(
-  cors({ credentials: true, origin: "https://beyond-todo-client.vercel.app" })
+  cors({
+    credentials: true,
+    //origin: "https://beyond-todo-client.vercel.app",
+    origin: "*",
+    allowedHeaders: "*",
+    methods: "*",
+  })
 );
 //CHECK IF NEEDED WHEN DEPLOYED
 app.use(bodyParser.json());
@@ -37,13 +57,12 @@ app.use(bodyParser.json());
 // Setting up & initializing session and initializing passport
 app.use(
   session({
-    cookie: { secure: false },
     secret: "secret",
     resave: false,
     saveUninitialized: true,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24,
-      secure: false,
+      secure: true,
       sameSite: "lax",
     },
   })
@@ -82,20 +101,6 @@ async function verificationCallback(username, password, callback) {
 
   return callback(null, user);
 }
-
-const strategy = new LocalStrategy(verificationCallback);
-passport.use(strategy);
-
-// Hexadecimal things
-passport.serializeUser((user, callback) => {
-  console.log("SERIAL", user);
-  callback(null, user);
-});
-
-passport.deserializeUser(async (user, callback) => {
-  console.log("DESERIAL", user);
-  callback(null, user);
-});
 
 // Register a new user
 app.post("/register", async (req, res) => {
