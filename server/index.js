@@ -58,6 +58,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 function isAuth(req, res, next) {
+  console.log("ISAUTH", req.isAuthenticated());
+
   if (req.isAuthenticated()) {
     return next();
   }
@@ -69,22 +71,15 @@ function isAuth(req, res, next) {
 async function verificationCallback(username, password, callback) {
   const user = await findUserByUsername(username);
 
-  console.log("AAAAAAAAAAAAAA HELP");
-
   if (!user) {
-    console.log("AAAAAAAAAAAAAA HELP 2");
     return callback(null, false, { message: "No user exists" });
   }
-  console.log("AAAAAAAAAAAAAA HELP 3");
   const matchedPassword = await bcrypt.compare(password, user.password);
 
-  console.log("AAAAAAAAAAAAAA HELP 4");
   if (!matchedPassword) {
-    console.log("AAAAAAAAAAAAAA HELP 5");
     return callback(null, false, { message: "Wrong password" });
   }
 
-  console.log("AAAAAAAAAAAAAA HELP 6");
   return callback(null, user);
 }
 
@@ -93,10 +88,12 @@ passport.use(strategy);
 
 // Hexadecimal things
 passport.serializeUser((user, callback) => {
+  console.log("SERIAL", user);
   callback(null, user);
 });
 
 passport.deserializeUser(async (user, callback) => {
+  console.log("DESERIAL", user);
   callback(null, user);
 });
 
