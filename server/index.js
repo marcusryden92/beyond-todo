@@ -64,13 +64,7 @@ app.use(cookieParser());
 app.use(passport.initialize());
 
 // Middlewears
-app.use(
-  cors({
-    credentials: true,
-    origin: "https://beyond-todo-client.vercel.app",
-    methods: "GET,POST,PUT,DELETE,OPTIONS",
-  })
-);
+app.use(cors());
 
 // Setting up & initializing session and initializing passport
 app.use(
