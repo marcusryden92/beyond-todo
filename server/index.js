@@ -45,7 +45,7 @@ app.use(
     credentials: true,
     origin: "https://beyond-todo-client.vercel.app",
     allowedHeaders: "*",
-    methods: "*",
+    methods: "GET,POST,PUT,DELETE",
   })
 );
 //CHECK IF NEEDED WHEN DEPLOYED
