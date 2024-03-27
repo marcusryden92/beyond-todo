@@ -44,7 +44,7 @@ app.use(
   cors({
     credentials: true,
     origin: "https://beyond-todo-client.vercel.app",
-    methods: "GET,POST,PUT,DELETE",
+    methods: "GET,POST,PUT,DELETE,OPTIONS",
   })
 );
 //CHECK IF NEEDED WHEN DEPLOYED
