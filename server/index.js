@@ -142,7 +142,7 @@ app.post("/register", async (req, res) => {
 app.post(
   "/login",
   passport.authenticate("local", {
-    successReturnToOrRedirect: "/",
+    failureRedirect: "/",
   })
 );
 
