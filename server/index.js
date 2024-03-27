@@ -124,7 +124,14 @@ app.post("/register", async (req, res) => {
 });
 
 // Login path + Authenticating a user
-app.post("/login", passport.authenticate("local"));
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+    failureFlash: true,
+  })
+);
 
 // Getting Session
 app.get("/session", (req, res) => {
