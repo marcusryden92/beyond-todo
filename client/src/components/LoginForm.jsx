@@ -50,7 +50,7 @@ export default function LoginForm() {
           placeholder="Password"
           className="w-full p-2 bg-bg  border-bug border-solid border-b-4"
         />
-{badCredentials ? (
+        {badCredentials ? (
           <div className="text-red-500">Wrong username or password.</div>
         ) : null}
         <button
