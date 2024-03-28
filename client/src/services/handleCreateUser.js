@@ -13,13 +13,18 @@ export async function handleCreateUser(
   };
 
   try {
-    const response = await fetch("http://localhost:3000/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
+    const response = await fetch(
+      "https://beyond-todo-server.vercel.app/register",
+      //   "http://localhost:3000/register",
+
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      }
+    );
 
     if (response.status === 409) {
       setDisplayError("username taken");

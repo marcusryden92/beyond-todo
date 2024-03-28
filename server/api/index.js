@@ -1,7 +1,11 @@
-const express = require("express");
 const cors = require("cors");
-const app = express();
-const port = process.env.PORT || 3000;
+const bcrypt = require("bcrypt");
+const express = require("express");
+const passport = require("passport");
+const { v4: uuidv4 } = require("uuid");
+const bodyParser = require("body-parser");
+const session = require("express-session");
+const LocalStrategy = require("passport-local").Strategy;
 
 const {
   createTask,
@@ -11,71 +15,19 @@ const {
   getTasks,
   editTask,
 } = require("./handlers"); // Importing handlers
-const { setupRouting } = require("./express");
-const pool = require("./db");
 
-const bodyParser = require("body-parser");
-// const cookieParser = require("cookie-parser");
-// app.use(cookieParser());
-
-// Login & Session
-const session = require("express-session");
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-
-//Hashing & Encrypting
-const bcrypt = require("bcrypt");
-
-// Generate random userId: --ADDED BY MARCUS
-const { v4: uuidv4 } = require("uuid");
-
-// Middlewears
-app.use(cors({ credentials: true, origin: "http://localhost:5173" })); //CHECK IF NEEDED WHEN DEPLOYED
-app.use(bodyParser.json());
-
-// Setting up & initializing session and initializing passport
-app.use(
-  session({
-    cookie: { secure: false },
-    secret: "secret",
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24,
-      secure: false,
-      sameSite: "lax",
-    }, //never do this in prod, however localhost has no https
-  })
-);
-
-// MARCUS logging function.
-app.use((req, res, next) => {
-  next();
-});
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-function isAuth(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.status(401).json({ error: "Unauthorized" });
-}
+//==========================================
 
 // Setting upp passport
 async function verificationCallback(username, password, callback) {
   const user = await findUserByUsername(username);
-
   if (!user) {
     return callback(null, false, { message: "No user exists" });
   }
   const matchedPassword = await bcrypt.compare(password, user.password);
-
   if (!matchedPassword) {
     return callback(null, false, { message: "Wrong password" });
   }
-
   return callback(null, user);
 }
 
@@ -84,12 +36,55 @@ passport.use(strategy);
 
 // Hexadecimal things
 passport.serializeUser((user, callback) => {
+  callback(null, user.username);
+});
+
+passport.deserializeUser(async (username, callback) => {
+  console.log("deserialize", username);
+  const user = await findUserByUsername(username);
   callback(null, user);
 });
 
-passport.deserializeUser(async (user, callback) => {
-  callback(null, user);
-});
+//==========================================
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.use(
+  cors({
+    origin: "https://beyond-todo-client.vercel.app",
+    // origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+app.use(
+  session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24,
+      secure: false,
+      sameSite: "lax",
+    },
+  })
+);
+
+app.use(passport.session());
+
+function isAuth(req, res, next) {
+  console.log("ISAUTH", req.isAuthenticated(), req.user);
+
+  if (req.isAuthenticated()) {
+    return next();
+  }
+
+  return res.status(401).json({ error: "Unauthorized" });
+}
 
 // Register a new user
 app.post("/register", async (req, res) => {
@@ -117,24 +112,12 @@ app.post("/register", async (req, res) => {
 });
 
 // Login path + Authenticating a user
-app.post("/login", (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json("Server error during login.");
-    }
-    if (!user) {
-      return res.status(401).json("Invalid username or password.");
-    }
-    req.logIn(user, function (err) {
-      if (err) {
-        console.error(err);
-        return res.status(500).json("Server error during login.");
-      }
-      console.log("Successful login for: " + req.user.username);
-      return res.json("Welcome " + req.user.username);
-    });
-  })(req, res, next);
+app.post("/login", passport.authenticate("local"), (req, res) => {
+  res.end();
+});
+
+app.get("/", (req, res) => {
+  res.end();
 });
 
 // Getting Session
@@ -148,7 +131,7 @@ app.get("/session", (req, res) => {
 });
 
 // Creating a task
-app.post("/task", isAuth, async (req, res) => {
+app.post("/task", async (req, res) => {
   try {
     const user_id = req.user.user_id;
     const task = req.body.task;
@@ -218,3 +201,5 @@ app.get("/tasks", isAuth, async (req, res) => {
 // setupRouting(app, createTask, readTasks);
 
 app.listen(port, () => console.log(`Listening on port ${port}....`));
+
+module.exports = app;

@@ -1,6 +1,8 @@
 export async function getTasks(setTasks) {
-  const url = "http://localhost:3000/tasks";
-  try {
+  const url = "https://beyond-todo-server.vercel.app/tasks";
+  //   const url = "http://localhost:3000/tasks";
+
+  http: try {
     const res = await fetch(url, {
       method: "GET",
       withCredentials: true,
@@ -21,7 +23,9 @@ export async function getTasks(setTasks) {
 }
 
 export async function deleteTask(task_id, fetchTasks) {
-  const url = "http://localhost:3000/task";
+  const url = "https://beyond-todo-server.vercel.app/task";
+  //   const url = "http://localhost:3000/task";
+
   const task_id_json = { task_id: task_id };
   try {
     const res = await fetch(url, {
@@ -44,7 +48,9 @@ export async function deleteTask(task_id, fetchTasks) {
 }
 
 export async function editTask(task_id, fetchTasks, task) {
-  const url = "http://localhost:3000/task";
+  const url = "https://beyond-todo-server.vercel.app/task";
+  //   const url = "http://localhost:3000/task";
+
   try {
     const res = await fetch(url, {
       method: "PUT",
@@ -66,7 +72,9 @@ export async function editTask(task_id, fetchTasks, task) {
 }
 
 export async function addTask(task, fetchTasks) {
-  const url = "http://localhost:3000/task";
+  const url = "https://beyond-todo-server.vercel.app/task";
+  //   const url = "http://localhost:3000/task";
+
   try {
     const res = await fetch(url, {
       method: "POST",

@@ -2,10 +2,10 @@
   "name": "beyond-todo",
   "version": "1.0.0",
   "description": "Beyond the Endpoint Todo-list project",
-  "main": "main.js",
+  "main": "api/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon main.js"
+    "start": "nodemon api/index.js"
   },
   "keywords": [
     "todo"

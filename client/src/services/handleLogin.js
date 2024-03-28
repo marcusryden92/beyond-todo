@@ -7,17 +7,21 @@ export async function handleLogin(e, name, password, setStatus, navigate) {
   };
 
   try {
-    const response = await fetch("http://localhost:3000/login", {
-      method: "POST",
-      withCredentials: true,
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-    const json = await response.json();
-    console.log("Data updated successfully:", json);
+    const response = await fetch(
+      "https://beyond-todo-server.vercel.app/login",
+      //   "http://localhost:3000/login",
+
+      {
+        method: "POST",
+        withCredentials: true,
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      }
+    );
+
     setStatus(response.status);
     if (response.ok) {
       console.log(response.status);

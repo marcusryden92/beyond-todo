@@ -21,6 +21,7 @@ export default function Main() {
 		return () => clearInterval(intervalID);
 	}, []);
 
+
 	function handleAdd(e) {
 		e.preventDefault();
 
@@ -33,6 +34,7 @@ export default function Main() {
 
 	async function handleLogout() {
 		const url = "http://localhost:3000/logout";
+
 
 		try {
 			const res = await fetch(url, {
@@ -94,6 +96,7 @@ export default function Main() {
 							<p className=" text-base sm:text-xl font-bold mb-4 uppercase">
 								You have a {tasks.length}-i-pede
 							</p>
+
 
 							<form
 								onSubmit={(e) => handleAdd(e)}
