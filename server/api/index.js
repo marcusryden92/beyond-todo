@@ -76,7 +76,17 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  console.log("Before:", req.user, req.headers);
+  next();
+});
+
 app.use(passport.session());
+
+app.use((req, res, next) => {
+  console.log("After:", req.user);
+  next();
+});
 
 function isAuth(req, res, next) {
   console.log("ISAUTH", req.isAuthenticated(), req.user);
