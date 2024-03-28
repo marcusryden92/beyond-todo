@@ -30,7 +30,7 @@ export default function Main() {
   }
 
   async function handleLogout() {
-    const url = "http://localhost:3000/logout";
+    const url = "https://beyond-todo-client.vercel.app/logout";
 
     try {
       const res = await fetch(url, {
