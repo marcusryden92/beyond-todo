@@ -1,5 +1,7 @@
 const taskRouteHandlers = require("./handlers/taskRouteHandlers");
 const userRouteHandlers = require("./handlers/userRouteHandlers");
+const { findUserByUsername } = require("./handlers/databaseHandlers"); // Importing handlers
+
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const cors = require("cors");
