@@ -1,7 +1,8 @@
 const express = require("express");
-require("dotenv").config();
-
+const dotenv = require("dotenv");
 const { setupRouting } = require("./express");
+
+dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 
@@ -14,5 +15,3 @@ async function main() {
 }
 
 main();
-
-module.exports = app;

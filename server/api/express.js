@@ -1,29 +1,13 @@
-import {
-  handlePostTask,
-  handlePutTask,
-  handleDeleteTask,
-  handleGetTaskList,
-} from "./handlers/taskRouteHandlers";
-
-import {
-  handleRegister,
-  handleSession,
-  handleLogout,
-} from "./handlers/userRouteHandlers";
-
+const taskRouteHandlers = require("./handlers/taskRouteHandlers");
+const userRouteHandlers = require("./handlers/userRouteHandlers");
 const bodyParser = require("body-parser");
 const session = require("express-session");
-
 const cors = require("cors");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
 function setupRouting(app) {
-  //
-  //
-  // ============================================================
   // AUTHENTICATION
-  // ============================================================
 
   async function verificationCallback(username, password, callback) {
     const user = await findUserByUsername(username);
@@ -41,7 +25,6 @@ function setupRouting(app) {
   const strategy = new LocalStrategy(verificationCallback);
   passport.use(strategy);
 
-  // Hexadecimal things
   passport.serializeUser(({ username, user_id }, callback) => {
     console.log("Serializeuser: ", username, " ", user_id);
     callback(null, JSON.stringify({ username, user_id }));
@@ -49,7 +32,6 @@ function setupRouting(app) {
 
   passport.deserializeUser(async (data, callback) => {
     console.log("Deserializeuser: ", data);
-
     const user = JSON.parse(data);
     callback(null, user);
   });
@@ -64,9 +46,7 @@ function setupRouting(app) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  // ============================================================
   // APP USE
-  // ============================================================
 
   app.use(
     cors({
@@ -88,40 +68,31 @@ function setupRouting(app) {
 
   app.use(passport.session());
 
-  // ============================================================
   // USER ROUTES
-  // ============================================================
 
   app.get("/", (_, res) => {
     res.end();
   });
 
-  app.post("/register", handleRegister);
+  app.post("/register", userRouteHandlers.handleRegister);
 
   app.post("/login", passport.authenticate("local"), (_, res) => {
     res.end();
   });
 
-  app.post("/logout", handleLogout);
+  app.post("/logout", userRouteHandlers.handleLogout);
 
-  // Getting Session
-  app.get("/session", handleSession);
+  app.get("/session", userRouteHandlers.handleSession);
 
-  // ============================================================
   // TASK ROUTES
-  // ============================================================
 
-  // Creating a task
-  app.post("/task", handlePostTask);
+  app.post("/task", taskRouteHandlers.handlePostTask);
 
-  // Editing a task
-  app.put("/task", isAuth, handlePutTask);
+  app.put("/task", isAuth, taskRouteHandlers.handlePutTask);
 
-  // Deleting a task
-  app.delete("/task", isAuth, handleDeleteTask);
+  app.delete("/task", isAuth, taskRouteHandlers.handleDeleteTask);
 
-  // Getting complete user task list
-  app.get("/tasks", isAuth, handleGetTaskList);
+  app.get("/tasks", isAuth, taskRouteHandlers.handleGetTaskList);
 }
 
 module.exports = { setupRouting };
