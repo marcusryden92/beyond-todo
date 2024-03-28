@@ -5,7 +5,6 @@ const passport = require("passport");
 const { v4: uuidv4 } = require("uuid");
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const cookieParser = require("cookie-parser");
 const LocalStrategy = require("passport-local").Strategy;
 
 const {
@@ -20,22 +19,16 @@ const {
 //==========================================
 
 // Setting upp passport
-function verificationCallback(username, password, callback) {
-  console.log("verify", username, password);
-  return callback(null, { username });
-
-  // const user = await findUserByUsername(username);
-
-  // if (!user) {
-  //   return callback(null, false, { message: "No user exists" });
-  // }
-  // const matchedPassword = await bcrypt.compare(password, user.password);
-
-  // if (!matchedPassword) {
-  //   return callback(null, false, { message: "Wrong password" });
-  // }
-
-  // return callback(null, user);
+async function verificationCallback(username, password, callback) {
+  const user = await findUserByUsername(username);
+  if (!user) {
+    return callback(null, false, { message: "No user exists" });
+  }
+  const matchedPassword = await bcrypt.compare(password, user.password);
+  if (!matchedPassword) {
+    return callback(null, false, { message: "Wrong password" });
+  }
+  return callback(null, user);
 }
 
 const strategy = new LocalStrategy(verificationCallback);
@@ -43,44 +36,43 @@ passport.use(strategy);
 
 // Hexadecimal things
 passport.serializeUser((user, callback) => {
-  console.log("serialize", user);
-  callback(null, "superSafeb64String");
+  callback(null, user.username);
 });
 
-passport.deserializeUser(async (user, callback) => {
-  console.log("deserialize", user);
+passport.deserializeUser(async (username, callback) => {
+  console.log("deserialize", username);
+  const user = await findUserByUsername(username);
   callback(null, user);
 });
 
 //==========================================
 
 const app = express();
-// const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
-//CHECK IF NEEDED WHEN DEPLOYED
-app.use(express.urlencoded({ extended: false }));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cookieParser());
-app.use(passport.initialize());
 
-// Middlewears
-app.use(cors());
-
-// Setting up & initializing session and initializing passport
 app.use(
   session({
     secret: "secret",
     resave: false,
-    saveUninitialized: true,
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24,
-      secure: true,
-      sameSite: "lax",
-    },
+    saveUninitialized: false,
+    // cookie: {
+    //   maxAge: 1000 * 60 * 60 * 24,
+    //   secure: true,
+    //   sameSite: "lax",
+    // },
   })
 );
 
-app.use(passport.authenticate("session"));
+app.use(passport.session());
 
 function isAuth(req, res, next) {
   console.log("ISAUTH", req.isAuthenticated(), req.user);
@@ -118,12 +110,9 @@ app.post("/register", async (req, res) => {
 });
 
 // Login path + Authenticating a user
-app.post(
-  "/login",
-  passport.authenticate("local", {
-    successRedirect: "/",
-  })
-);
+app.post("/login", passport.authenticate("local"), (req, res) => {
+  res.end();
+});
 
 app.get("/", (req, res) => {
   res.end();
@@ -209,6 +198,6 @@ app.get("/tasks", isAuth, async (req, res) => {
 
 // setupRouting(app, createTask, readTasks);
 
-// app.listen(port, () => console.log(`Listening on port ${port}....`));
+app.listen(port, () => console.log(`Listening on port ${port}....`));
 
 module.exports = app;
