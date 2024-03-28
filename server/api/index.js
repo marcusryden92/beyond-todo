@@ -35,12 +35,12 @@ const strategy = new LocalStrategy(verificationCallback);
 passport.use(strategy);
 
 // Hexadecimal things
-passport.serializeUser((user, callback) => {
-  callback(null, user);
+passport.serializeUser(({ username, user_id }, callback) => {
+  callback(null, JSON.stringify({ username, user_id }));
 });
 
-passport.deserializeUser(async (user, callback) => {
-  console.log(user);
+passport.deserializeUser(async (data, callback) => {
+  const user = JSON.parse(data);
   callback(null, user);
 });
 
