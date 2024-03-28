@@ -58,7 +58,7 @@ app.use(passport.session());
 app.use(passport.authenticate("session"));
 
 function isAuth(req, res, next) {
-  console.log("isAuth: " + req.user);
+  // console.log("isAuth: " + req.user);
   if (req.isAuthenticated()) {
     return next();
   }
