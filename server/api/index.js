@@ -36,12 +36,10 @@ passport.use(strategy);
 
 // Hexadecimal things
 passport.serializeUser((user, callback) => {
-  callback(null, user.username);
+  callback(null, user);
 });
 
-passport.deserializeUser(async (username, callback) => {
-  console.log("deserialize", username);
-  const user = await findUserByUsername(username);
+passport.deserializeUser(async (user, callback) => {
   callback(null, user);
 });
 
