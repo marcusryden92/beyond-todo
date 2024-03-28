@@ -1,5 +1,5 @@
 export async function checkSession(setStatus) {
-  const url = "https://beyond-todo-client.vercel.app/session";
+  const url = "https://beyond-todo-server.vercel.app/session";
   const res = await fetch(url, {
     method: "GET",
     withCredentials: true,

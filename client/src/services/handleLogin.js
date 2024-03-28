@@ -8,7 +8,7 @@ export async function handleLogin(e, name, password, setStatus, navigate) {
 
   try {
     const response = await fetch(
-      "https://beyond-todo-client.vercel.app/login",
+      "https://beyond-todo-server.vercel.app/login",
       {
         method: "POST",
         withCredentials: true,
