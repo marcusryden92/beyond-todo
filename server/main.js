@@ -58,6 +58,7 @@ app.use(passport.session());
 app.use(passport.authenticate("session"));
 
 function isAuth(req, res, next) {
+  console.log("isAuth: " + req.user);
   if (req.isAuthenticated()) {
     return next();
   }
@@ -211,6 +212,7 @@ app.post("/logout", (req, res) => {
 
 // Getting User
 app.get("/tasks", isAuth, async (req, res) => {
+  console.log("get /tasks: " + req.user);
   const user_id = req.user.user_id;
   const tasks = await getTasks(user_id);
   res.json(tasks);
