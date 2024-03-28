@@ -7,6 +7,8 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const LocalStrategy = require("passport-local").Strategy;
 
+require("dotenv").config();
+
 const {
   createTask,
   deleteTask,
@@ -53,9 +55,11 @@ passport.deserializeUser(async (data, callback) => {
 const app = express();
 const port = process.env.PORT || 3000;
 
+console.log(process.env.ORIGINURL);
+
 app.use(
   cors({
-    origin: "https://beyond-todo-client.vercel.app",
+    origin: process.env.ORIGINURL,
     credentials: true,
   })
 );

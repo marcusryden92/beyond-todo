@@ -1,5 +1,5 @@
 export async function checkSession(setStatus) {
-  const url = "https://beyond-todo-server.vercel.app/session";
+  const url = `${import.meta.env.VITE_SERVER_URL}/session`;
   const res = await fetch(url, {
     method: "GET",
     withCredentials: true,
