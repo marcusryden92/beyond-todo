@@ -33,7 +33,7 @@ export default function Main() {
 
   async function handleLogout() {
     // const url = "http://localhost:3000/logout";
-    const url = "https://centipe-do-list-server.vercel.app/logout";
+    const url = "https://centipe-do-list-server-eta.vercel.app/logout";
 
     try {
       const res = await fetch(url, {

@@ -50,7 +50,12 @@ passport.deserializeUser(async (username, callback) => {
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://centipe-do-list-client-phi.vercel.app",
+    credentials: true,
+  })
+);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
