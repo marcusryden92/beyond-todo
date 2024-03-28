@@ -1,5 +1,5 @@
 export async function checkSession(setStatus) {
-  const url = "https://beyond-todo-server.vercel.app/session";
+  const url = "https://centipe-do-list-server.vercel.app/session";
   //   const url = "http://localhost:3000/session";
 
   const res = await fetch(url, {
