@@ -40,6 +40,7 @@ passport.serializeUser((user, callback) => {
 });
 
 passport.deserializeUser(async (user, callback) => {
+  console.log(user);
   callback(null, user);
 });
 
