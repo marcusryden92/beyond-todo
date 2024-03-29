@@ -7,20 +7,16 @@ export async function handleLogin(e, name, password, setStatus, navigate) {
   };
 
   try {
-    const response = await fetch(
-      "https://beyond-todo-server.vercel.app/login",
-      //   "http://localhost:3000/login",
+    const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/login`, {
+      method: "POST",
+      withCredentials: true,
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
 
-      {
-        method: "POST",
-        withCredentials: true,
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      }
-    );
 
     setStatus(response.status);
     if (response.ok) {

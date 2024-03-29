@@ -14,8 +14,8 @@ export async function handleCreateUser(
 
   try {
     const response = await fetch(
-      "https://beyond-todo-server.vercel.app/register",
-      //   "http://localhost:3000/register",
+
+      `${import.meta.env.VITE_SERVER_URL}/register`,
 
       {
         method: "POST",
