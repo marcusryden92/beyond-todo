@@ -63,18 +63,12 @@ async function getTasks(user_id) {
         user_id: "d0858cde-e2d9-4c08-b322-d049e029f6cc",
         task: "screen record",
         task_completed: "0",
-        username: "maya",
-        password:
-          "$2b$10$K1KxUIcRzmx4n7tNRltlfOeRPYj/oye4ESQ8MOboi059oUf9UuWZK",
       },
       {
         task_id: 613,
         user_id: "d0858cde-e2d9-4c08-b322-d049e029f6cc",
         task: "add",
         task_completed: "0",
-        username: "maya",
-        password:
-          "$2b$10$K1KxUIcRzmx4n7tNRltlfOeRPYj/oye4ESQ8MOboi059oUf9UuWZK",
       },
     ];
 
