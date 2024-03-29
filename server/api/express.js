@@ -20,13 +20,11 @@ function setupRouting(app) {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
 
-  //
   app.use(
     session({
       secret: "secret",
       resave: false,
       saveUninitialized: false,
-      sameSite: "none",
     })
   );
 
