@@ -5,6 +5,7 @@ const { isAuth } = require("./passport");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const cors = require("cors");
+const passport = require("passport");
 
 function setupRouting(app) {
   // APP USE
