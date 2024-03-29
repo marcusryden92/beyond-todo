@@ -6,6 +6,8 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const cors = require("cors");
 const passport = require("passport");
+const bcrypt = require("bcrypt");
+
 const LocalStrategy = require("passport-local").Strategy;
 
 function setupRouting(app) {
