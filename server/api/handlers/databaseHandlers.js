@@ -16,18 +16,9 @@ const {
 // RETURN OBJECT OF USER ROW (USER OBJECT)
 async function findUserByUsername(username) {
   try {
-    /* 
     const result = await pool.query(findUserByUsernameSQL, [username]);
     console.log("Result from findUserByUserName", result);
-    return result.rows[0]; // Assuming there's only one user with the provided username */
-
-    const tempObject = {
-      user_id: "d0858cde-e2d9-4c08-b322-d049e029f6cc",
-      username: "maya",
-      password: "$2b$10$K1KxUIcRzmx4n7tNRltlfOeRPYj/oye4ESQ8MOboi059oUf9UuWZK",
-    };
-
-    return tempObject;
+    return result.rows[0]; // Assuming there's only one user with the provided username
   } catch (error) {
     console.error("Error executing query in findUseByUsername:", error);
     throw error;
@@ -55,7 +46,7 @@ async function getTasks(user_id) {
   try {
     const result = await pool.query(getTasksSQL, [user_id]);
     console.log("getTasks:", result.rows);
-    return result.rows[0];
+    return result.rows;
   } catch (error) {
     console.error("Error executing query in getTask:", error);
     throw error;
