@@ -7,7 +7,7 @@ const {
   createTaskSQL,
   deleteTaskSQL,
   editTaskSQL,
-} = require("../SQL");
+} = require("./SQL");
 
 // ============================================================
 // USER DATABASE HANDLERS
