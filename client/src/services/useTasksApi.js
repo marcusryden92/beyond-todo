@@ -1,4 +1,5 @@
 export async function getTasks(setTasks) {
+
   const url = `${import.meta.env.VITE_SERVER_URL}/tasks`;
   try {
     const res = await fetch(url, {
