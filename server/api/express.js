@@ -10,12 +10,14 @@ const passport = require("passport");
 function setupRouting(app) {
   // APP USE
 
-  app.use(
-    cors({
-      origin: process.env.ORIGINURL,
-      credentials: true,
-    })
-  );
+  // app.use(
+  //   cors({
+  //     origin: process.env.ORIGINURL,
+  //     credentials: true,
+  //   })
+  // );
+
+  app.use(cors());
 
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
