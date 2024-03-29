@@ -17,6 +17,7 @@ export async function handleLogin(e, name, password, setStatus, navigate) {
       body: JSON.stringify(userData),
     });
 
+
     setStatus(response.status);
     if (response.ok) {
       console.log(response.status);

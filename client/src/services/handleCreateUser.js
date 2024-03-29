@@ -14,7 +14,9 @@ export async function handleCreateUser(
 
   try {
     const response = await fetch(
+
       `${import.meta.env.VITE_SERVER_URL}/register`,
+
       {
         method: "POST",
         headers: {
