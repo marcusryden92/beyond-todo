@@ -25,6 +25,7 @@ function setupRouting(app) {
       secret: "secret",
       resave: false,
       saveUninitialized: false,
+      sameSite: "none",
     })
   );
 
