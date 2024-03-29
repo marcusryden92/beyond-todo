@@ -53,26 +53,9 @@ async function addUser(user) {
 // GET COMPLETE TASK LIST
 async function getTasks(user_id) {
   try {
-    /*   const result = await pool.query(getTasksSQL, [user_id]);
+    const result = await pool.query(getTasksSQL, [user_id]);
     console.log("getTasks:", result.rows);
-    return result.rows; */
-
-    const tempTasks = [
-      {
-        task_id: 610,
-        user_id: "d0858cde-e2d9-4c08-b322-d049e029f6cc",
-        task: "screen record",
-        task_completed: "0",
-      },
-      {
-        task_id: 613,
-        user_id: "d0858cde-e2d9-4c08-b322-d049e029f6cc",
-        task: "add",
-        task_completed: "0",
-      },
-    ];
-
-    return tempTasks;
+    return result.rows[0];
   } catch (error) {
     console.error("Error executing query in getTask:", error);
     throw error;
