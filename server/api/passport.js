@@ -35,7 +35,7 @@ passport.deserializeUser(async (data, callback) => {
 });
 
 function isAuth(req, res, next) {
-  console.log("ISAUTH", req.isAuthenticated(), req.user);
+  // console.log("ISAUTH", req.isAuthenticated(), req.user);
 
   if (req.isAuthenticated()) {
     return next();

@@ -1,10 +1,9 @@
 export async function getTasks(setTasks) {
-
   const url = `${import.meta.env.VITE_SERVER_URL}/tasks`;
   try {
     const res = await fetch(url, {
       method: "GET",
-      mode: "cors",
+      mode: "no-cors",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
