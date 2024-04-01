@@ -1,0 +1,10 @@
+[build]
+  base = "client"
+  publish = "client" # Adjust this path according to Vite's output directory
+  command = "npm run build" # Or whatever command you use to build your React client
+
+[build.environment]
+  NODE_VERSION = "14.x" # Adjust the node version as needed
+
+[build.processing]
+  # You can add any additional processing directives here if needed
