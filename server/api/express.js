@@ -25,7 +25,7 @@ function setupRouting(app) {
       secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
-      sameSite: "lax",
+      sameSite: "none",
     })
   );
 
