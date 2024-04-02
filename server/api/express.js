@@ -11,10 +11,10 @@ function setupRouting(app) {
   // APP USE
 
   app.use(
-    cors(/* {
+    cors({
       origin: process.env.ORIGINURL,
       credentials: true,
-    } */)
+    })
   );
 
   app.use(bodyParser.urlencoded({ extended: false }));
@@ -25,7 +25,7 @@ function setupRouting(app) {
       secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
-      // sameSite: "none",
+      sameSite: "lax",
     })
   );
 
