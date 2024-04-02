@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
 
-const { findUserByUsername, addUser } = require("./databaseHandlers"); // Importing handlers
+const { findUserByUsername, addUser } = require("../models/userModel"); // Importing handlers
 
 async function handleRegister(req, res) {
   try {

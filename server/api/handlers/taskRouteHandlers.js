@@ -3,7 +3,7 @@ const {
   deleteTask,
   getTasks,
   editTask,
-} = require("./databaseHandlers"); // Importing handlers
+} = require("../models/taskModel"); // Importing handlers
 
 async function handlePostTask(req, res) {
   try {
