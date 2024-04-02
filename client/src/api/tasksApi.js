@@ -3,7 +3,7 @@ export async function getTasks(setTasks) {
   try {
     const res = await fetch(url, {
       method: "GET",
-      mode: "cors",
+      mode: "no-cors",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
