@@ -7,6 +7,8 @@ import anime from "animejs";
 import Task from "../components/Task";
 import { myContext } from "../context/Context";
 
+import { handleLogout } from "../api/userApi";
+
 export default function Main() {
   const navigate = useNavigate();
   const param = useParams();
@@ -26,29 +28,6 @@ export default function Main() {
       const newTask = taskInput.current.value.trim();
       addTask(newTask, fetchTasks);
       taskInput.current.value = "";
-    }
-  }
-
-  async function handleLogout() {
-    const url = `${import.meta.env.VITE_SERVER_URL}/logout`;
-
-    try {
-      const res = await fetch(url, {
-        method: "POST",
-        credentials: "include",
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (res.status === 200) {
-        console.log("res STATUS: " + res.status);
-        navigate("/");
-      } else {
-        alert("Failed to logout");
-      }
-    } catch (error) {
-      console.error("Error:", error);
     }
   }
 
@@ -121,7 +100,9 @@ export default function Main() {
           </ul>
           <div className=" mx-auto bg-bug p-4 rounded-bl-[4em] rounded-br-[4em] flex justify-center border-solid border-t-2 border-bugSecondary max-w-[40em]">
             <button
-              onClick={handleLogout}
+              onClick={() => {
+                handleLogout(navigate);
+              }}
               className=" py-2 text-text font-semibold rounded-full bg-bugSecondary  hover:bg-eyes hover:text-bg transition duration-200 px-4"
             >
               LOG OUT

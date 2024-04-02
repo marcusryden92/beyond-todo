@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { handleLogin } from "../services/handleLogin";
+import { handleLogin } from "../api/userApi";
 import { myContext } from "../context/Context";
 import { Link } from "react-router-dom";
 
-import { handleCreateUser } from "../services/handleCreateUser";
+import { handleCreateUser } from "../api/userApi";
 import { validateCredentials } from "../services/validateCredentials";
 
 export default function RegisterForm() {
@@ -82,7 +82,7 @@ export default function RegisterForm() {
         >
           Sign up
         </button>
-      <div className="text-red-500">{displayError}</div>
+        <div className="text-red-500">{displayError}</div>
         <p className="text-bug">
           Already a member?{" "}
           <Link to="/" className="text-eyes hover:underline">

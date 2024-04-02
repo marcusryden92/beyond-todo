@@ -11,8 +11,6 @@ export default function Task(props) {
   const editInput = useRef(null);
   const { fetchTasks } = myContext();
 
-  console.log(props);
-
   function handleDelete() {
     deleteTask(props.task.task_id, fetchTasks);
   }
