@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 export const ContextProvider = createContext(null);
-import { getTasks } from "../services/useTasksApi";
+import { getTasks } from "../api/tasksApi";
 
 export const Context = ({ children }) => {
   const [tasks, setTasks] = useState([]);

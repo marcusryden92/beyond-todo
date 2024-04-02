@@ -4,7 +4,7 @@ import { handleLogin } from "../services/handleLogin";
 import { myContext } from "../context/Context";
 import { Link } from "react-router-dom";
 
-import { checkSession } from "../services/checkSession";
+import { validateSession } from "../services/validateSession";
 
 export default function LoginForm() {
   const loginPassword = useRef();
@@ -16,7 +16,7 @@ export default function LoginForm() {
 
   useEffect(() => {
     async function checkAuth() {
-      const sessionData = await checkSession(setStatus); // Get status and username from checkSession
+      const sessionData = await validateSession(setStatus); // Get status and username from validateSession
 
       if (sessionData.status === 200) {
         // Redirect to main page with the retrieved username
@@ -50,7 +50,7 @@ export default function LoginForm() {
           placeholder="Password"
           className="w-full p-2 bg-bg  border-bug border-solid border-b-4"
         />
-{badCredentials ? (
+        {badCredentials ? (
           <div className="text-red-500">Wrong username or password.</div>
         ) : null}
         <button

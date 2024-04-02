@@ -2,7 +2,7 @@ import { useState, useRef, useContext } from "react";
 import { MdDelete } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
-import { deleteTask, editTask } from "../services/useTasksApi";
+import { deleteTask, editTask } from "../api/tasksApi";
 import { myContext } from "../context/Context";
 
 export default function Task(props) {
@@ -11,7 +11,7 @@ export default function Task(props) {
   const editInput = useRef(null);
   const { fetchTasks } = myContext();
 
-  console.log(props)
+  console.log(props);
 
   function handleDelete() {
     deleteTask(props.task.task_id, fetchTasks);
@@ -44,7 +44,12 @@ export default function Task(props) {
         className=" flex justify-between items-center py-2 pl-6 border-solid border-t-2 border-y-bugSecondary  relative w-full bg-bug h-[3em] transition duration-200 overflow-hidden"
       >
         {editingTask ? (
-          <input type="text" placeholder={props.task.task} ref={editInput} className=" text-sm sm:text-base rounded-full text-text text-semibold px-4 py-2 bg-bugSecondary h-full text-semibold " />
+          <input
+            type="text"
+            placeholder={props.task.task}
+            ref={editInput}
+            className=" text-sm sm:text-base rounded-full text-text text-semibold px-4 py-2 bg-bugSecondary h-full text-semibold "
+          />
         ) : (
           <span className=" w-[80%] text-text font-semibold ">
             {props.task.task}

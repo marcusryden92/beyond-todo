@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef, useContext } from "react";
-import { addTask } from "../services/useTasksApi";
+import { addTask } from "../api/tasksApi";
 import { useNavigate } from "react-router-dom";
 import { IoMdAdd } from "react-icons/io";
 import anime from "animejs";
