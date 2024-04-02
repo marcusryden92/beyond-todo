@@ -4,7 +4,7 @@ import { addTask } from "../api/tasksApi";
 import { useNavigate } from "react-router-dom";
 import { IoMdAdd } from "react-icons/io";
 import anime from "animejs";
-import Task from "../components/Task";
+import TaskListItem from "../components/TaskListItem";
 import { myContext } from "../context/Context";
 
 import { handleLogout } from "../api/userApi";
@@ -94,7 +94,7 @@ export default function Main() {
           <ul className="text-left mx-auto">
             {tasks
               ? tasks.map((task, index) => (
-                  <Task key={index} index={index} task={task} />
+                  <TaskListItem key={index} index={index} task={task} />
                 ))
               : ""}
           </ul>

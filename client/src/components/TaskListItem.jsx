@@ -5,7 +5,7 @@ import { FaCheck } from "react-icons/fa";
 import { deleteTask, editTask } from "../api/tasksApi";
 import { myContext } from "../context/Context";
 
-export default function Task(props) {
+export default function TaskListItem(props) {
   const [isHovered, setIsHovered] = useState(false);
   const [editingTask, setEditingTask] = useState(false);
   const editInput = useRef(null);
