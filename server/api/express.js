@@ -1,5 +1,5 @@
-const taskRouteHandlers = require("./handlers/taskRouteHandlers");
-const userRouteHandlers = require("./handlers/userRouteHandlers");
+const taskRouteHandlers = require("./handlers/taskHandlers");
+const userRouteHandlers = require("./handlers/userHandlers");
 const { findUserByUsername } = require("./models/userModel"); // Importing handlers
 
 const bodyParser = require("body-parser");

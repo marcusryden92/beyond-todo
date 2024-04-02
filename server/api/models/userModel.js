@@ -1,6 +1,6 @@
 const pool = require("../db");
 
-const { findUserByUsernameSQL, addUserSQL } = require("../SQL");
+const { findUserByUsernameSQL, addUserSQL } = require("../queries/userQueries");
 
 // ============================================================
 // USER DATABASE HANDLERS

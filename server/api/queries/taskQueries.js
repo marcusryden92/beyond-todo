@@ -20,18 +20,7 @@ const deleteTaskSQL = `
 UPDATE tasks SET task_completed = B'1' WHERE task_id = $1
 `;
 
-const findUserByUsernameSQL = `
-SELECT * FROM users WHERE username = $1
-`;
-
-const addUserSQL = `
-INSERT INTO users (user_id, username, password) 
-VALUES ($1, $2, $3)
-`;
-
 module.exports = {
-  findUserByUsernameSQL,
-  addUserSQL,
   getTasksSQL,
   createTaskSQL,
   deleteTaskSQL,
