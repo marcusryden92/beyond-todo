@@ -22,7 +22,7 @@ function setupRouting(app) {
 
   app.use(
     session({
-      secret: "secret",
+      secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       sameSite: "lax",
