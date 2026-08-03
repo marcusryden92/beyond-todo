@@ -3,6 +3,7 @@ const pool = require("../db");
 const {
   findUserByUsernameSQL,
   addUserSQL,
+  deleteUserSQL,
   getTasksSQL,
   createTaskSQL,
   deleteTaskSQL,
@@ -32,6 +33,17 @@ async function addUser(user) {
     return;
   } catch (error) {
     console.error("Error executing query in addUser", error);
+    throw error;
+  }
+}
+
+// DELETE A USER (their tasks are removed automatically via ON DELETE CASCADE)
+async function deleteUser(user_id) {
+  try {
+    await pool.query(deleteUserSQL, [user_id]);
+    return;
+  } catch (error) {
+    console.error("Error executing query in deleteUser:", error);
     throw error;
   }
 }
@@ -91,6 +103,7 @@ module.exports = {
   // createTask,
   findUserByUsername,
   addUser,
+  deleteUser,
   getTasks,
   createTask,
   deleteTask,

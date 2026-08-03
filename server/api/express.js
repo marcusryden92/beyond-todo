@@ -52,21 +52,49 @@ function setupRouting(app) {
 
   // APP USE
 
+  // Trust the Render/Vercel proxy so `secure` cookies survive HTTPS termination.
+  app.set("trust proxy", 1);
+
+  // Accept one or more front-end origins (comma-separated), tolerant of a
+  // trailing slash — the silent mismatch that usually breaks credentialed CORS.
+  const allowedOrigins = (process.env.ORIGINURL || "")
+    .split(",")
+    .map((o) => o.trim().replace(/\/$/, ""))
+    .filter(Boolean);
+
   app.use(
     cors({
-      origin: process.env.ORIGINURL,
+      origin(origin, callback) {
+        // No Origin header (curl, health checks, same-origin) → allow.
+        if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
+          return callback(null, true);
+        }
+        console.warn(`Blocked by CORS: ${origin}`);
+        return callback(null, false);
+      },
       credentials: true,
     }),
   );
+
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
+
+  const isProd = process.env.NODE_ENV === "production";
   app.use(
     session({
-      secret: "secret",
+      secret: process.env.SESSION_SECRET || "dev-secret-change-me",
       resave: false,
       saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+        sameSite: isProd ? "none" : "lax", // "none" lets the cookie travel cross-site in prod
+        secure: isProd, // required whenever sameSite is "none"; both ends are HTTPS in prod
+        maxAge: 1000 * 60 * 60 * 24, // 1 day
+      },
     }),
   );
+
+  app.use(passport.initialize());
   app.use(passport.session());
 
   // USER ROUTES
@@ -80,9 +108,10 @@ function setupRouting(app) {
   });
   app.post("/logout", userRouteHandlers.handleLogout);
   app.get("/session", userRouteHandlers.handleSession);
+  app.delete("/account", isAuth, userRouteHandlers.handleDeleteAccount);
 
   // TASK ROUTES
-  app.post("/task", taskRouteHandlers.handlePostTask);
+  app.post("/task", isAuth, taskRouteHandlers.handlePostTask);
   app.put("/task", isAuth, taskRouteHandlers.handlePutTask);
   app.delete("/task", isAuth, taskRouteHandlers.handleDeleteTask);
   app.get("/tasks", isAuth, taskRouteHandlers.handleGetTaskList);

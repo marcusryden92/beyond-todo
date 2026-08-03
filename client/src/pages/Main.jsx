@@ -33,7 +33,7 @@ export default function Main() {
 	}
 
 	async function handleLogout() {
-		const url = "http://localhost:3000/logout";
+		const url = `${import.meta.env.VITE_SERVER_URL}/logout`;
 
 
 		try {
@@ -50,6 +50,36 @@ export default function Main() {
 				navigate("/");
 			} else {
 				alert("Failed to logout");
+			}
+		} catch (error) {
+			console.error("Error:", error);
+		}
+	}
+
+	async function handleDeleteAccount() {
+		if (
+			!window.confirm(
+				"Delete your account and all your tasks? This can't be undone.",
+			)
+		) {
+			return;
+		}
+
+		const url = `${import.meta.env.VITE_SERVER_URL}/account`;
+
+		try {
+			const res = await fetch(url, {
+				method: "DELETE",
+				credentials: "include",
+				withCredentials: true,
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+			if (res.status === 200) {
+				navigate("/");
+			} else {
+				alert("Failed to delete account");
 			}
 		} catch (error) {
 			console.error("Error:", error);
@@ -129,12 +159,18 @@ export default function Main() {
 					</ul>
 
 					{/* BUTT */}
-					<div className=" mx-auto bg-bug p-6 rounded-bl-[4em] rounded-br-[4em] flex justify-center border-solid border-t-2 border-bugSecondary max-w-[40em]">
+					<div className=" mx-auto bg-bug p-6 rounded-bl-[4em] rounded-br-[4em] flex justify-center gap-4 border-solid border-t-2 border-bugSecondary max-w-[40em]">
 						<button
 							onClick={handleLogout}
 							className=" py-2 text-text font-semibold rounded-full bg-bugSecondary  hover:bg-eyes hover:text-bg transition duration-200 px-4"
 						>
 							LOG OUT
+						</button>
+						<button
+							onClick={handleDeleteAccount}
+							className=" py-2 text-text font-semibold rounded-full bg-eyes hover:bg-red-800 transition duration-200 px-4"
+						>
+							DELETE ACCOUNT
 						</button>
 					</div>
 					<div className=" w-4 h-4 bg-bug mx-auto"></div>
