@@ -67,7 +67,6 @@ export default function LoginForm() {
           placeholder="Username"
           className="w-full p-2  bg-bg  border-bug border-solid border-b-4 "
         />
-
         <input
           ref={loginPassword}
           id="password"
@@ -88,7 +87,8 @@ export default function LoginForm() {
         </button>
         {wakingUp ? (
           <p className="text-bug text-sm">
-            Waking up the server — this can take up to a minute on the free tier…
+            Waking up the server — this can take up to a minute on the free
+            tier…
           </p>
         ) : null}
         <p className="text-bug">
@@ -96,6 +96,10 @@ export default function LoginForm() {
           <Link to="/signup" className="text-eyes hover:underline">
             Sign up!
           </Link>
+        </p>
+        <p className="text-sm opacity-50">
+          By Maya Jerndahl Bonk, Milla Lindén, Marcus Rydén, Oskar Sollenberg,
+          Oliver Redondo
         </p>
       </form>
     </div>
