@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { handleLogin } from "../api/userApi";
 import { myContext } from "../context/Context";
@@ -13,6 +13,31 @@ export default function LoginForm() {
   const { setStatus, badCredentials, setBadCredentials } = myContext();
 
   const navigate = useNavigate();
+
+  const [loggingIn, setLoggingIn] = useState(false);
+  const [wakingUp, setWakingUp] = useState(false);
+
+  async function onLogin(e) {
+    setLoggingIn(true);
+    setWakingUp(false);
+    // Free-tier backends (Render) can take up to a minute to spin up from cold;
+    // if the request is slow, reassure the user instead of looking frozen.
+    const wakeTimer = setTimeout(() => setWakingUp(true), 4000);
+    try {
+      await handleLogin(
+        e,
+        loginUsername.current.value,
+        loginPassword.current.value,
+        setStatus,
+        navigate,
+        setBadCredentials,
+      );
+    } finally {
+      clearTimeout(wakeTimer);
+      setLoggingIn(false);
+      setWakingUp(false);
+    }
+  }
 
   useEffect(() => {
     async function checkAuth() {
@@ -54,21 +79,18 @@ export default function LoginForm() {
           <div className="text-red-500">Wrong username or password.</div>
         ) : null}
         <button
-          onClick={(e) => {
-            handleLogin(
-              e,
-              loginUsername.current.value,
-              loginPassword.current.value,
-              setStatus,
-              navigate,
-              setBadCredentials
-            );
-          }}
+          onClick={onLogin}
           type="submit"
-          className="w-full py-2 rounded-full font-semibold bg-bug hover:brightness-125 transition duration-200 text-text font-todo mt-8"
+          disabled={loggingIn}
+          className="w-full py-2 rounded-full font-semibold bg-bug hover:brightness-125 transition duration-200 text-text font-todo mt-8 disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          Log in
+          {loggingIn ? "Logging in…" : "Log in"}
         </button>
+        {wakingUp ? (
+          <p className="text-bug text-sm">
+            Waking up the server — this can take up to a minute on the free tier…
+          </p>
+        ) : null}
         <p className="text-bug">
           Not a member?{" "}
           <Link to="/signup" className="text-eyes hover:underline">

@@ -5,8 +5,6 @@ import Login from "./pages/Login";
 import Main from "./pages/Main";
 import RegisterForm from "./components/RegisterForm";
 import { Context } from "./context/Context.jsx";
-
-
 import PrivateRoutes from "./context/PrivateRoutes.jsx";
 
 export default function App() {

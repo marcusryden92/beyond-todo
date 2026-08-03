@@ -7,7 +7,7 @@ import anime from "animejs";
 import TaskListItem from "../components/TaskListItem";
 import { myContext } from "../context/Context";
 
-import { handleLogout } from "../api/userApi";
+import { handleLogout, handleDeleteAccount } from "../api/userApi";
 
 export default function Main() {
   const navigate = useNavigate();
@@ -98,7 +98,7 @@ export default function Main() {
                 ))
               : ""}
           </ul>
-          <div className=" mx-auto bg-bug p-4 rounded-bl-[4em] rounded-br-[4em] flex justify-center border-solid border-t-2 border-bugSecondary max-w-[40em]">
+          <div className=" mx-auto bg-bug p-4 rounded-bl-[4em] rounded-br-[4em] flex justify-center gap-4 border-solid border-t-2 border-bugSecondary max-w-[40em]">
             <button
               onClick={() => {
                 handleLogout(navigate);
@@ -106,6 +106,14 @@ export default function Main() {
               className=" py-2 text-text font-semibold rounded-full bg-bugSecondary  hover:bg-eyes hover:text-bg transition duration-200 px-4"
             >
               LOG OUT
+            </button>
+            <button
+              onClick={() => {
+                handleDeleteAccount(navigate);
+              }}
+              className=" py-2 text-text font-semibold rounded-full bg-eyes hover:bg-red-800 transition duration-200 px-4"
+            >
+              DELETE ACCOUNT
             </button>
           </div>
         </div>

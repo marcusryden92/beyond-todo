@@ -1,7 +1,11 @@
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
 
-const { findUserByUsername, addUser } = require("../models/userModel"); // Importing handlers
+const {
+  findUserByUsername,
+  addUser,
+  deleteUser,
+} = require("../models/userModel"); // Importing handlers
 
 async function handleRegister(req, res) {
   try {
@@ -52,8 +56,38 @@ function handleSession(req, res) {
   }
 }
 
+async function handleDeleteAccount(req, res) {
+  try {
+    const user_id = req.user.user_id;
+    await deleteUser(user_id); // tasks are cleaned up via ON DELETE CASCADE
+
+    // Tear down the now-orphaned login session, just like logout.
+    req.logout(function (err) {
+      if (err) {
+        console.error(err);
+        return res
+          .status(500)
+          .json("Account deleted, but session cleanup failed.");
+      }
+      req.session.destroy(function (err) {
+        if (err) {
+          console.error(err);
+          return res
+            .status(500)
+            .json("Account deleted, but session cleanup failed.");
+        }
+        res.status(200).json("Account deleted successfully.");
+      });
+    });
+  } catch (error) {
+    console.error("Error deleting account:", error);
+    res.status(500).json("Server error during account deletion.");
+  }
+}
+
 module.exports = {
   handleRegister,
   handleSession,
   handleLogout,
+  handleDeleteAccount,
 };

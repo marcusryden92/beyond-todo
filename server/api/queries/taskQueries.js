@@ -1,4 +1,4 @@
-// Create User
+// Task queries
 const getTasksSQL = `
 SELECT *
 FROM tasks

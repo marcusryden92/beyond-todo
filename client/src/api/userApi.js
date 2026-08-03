@@ -50,6 +50,36 @@ export async function handleLogout(navigate) {
   }
 }
 
+export async function handleDeleteAccount(navigate) {
+  if (
+    !window.confirm(
+      "Delete your account and all your tasks? This can't be undone.",
+    )
+  ) {
+    return;
+  }
+
+  const url = `${import.meta.env.VITE_SERVER_URL}/account`;
+
+  try {
+    const res = await fetch(url, {
+      method: "DELETE",
+      credentials: "include",
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (res.status === 200) {
+      navigate("/");
+    } else {
+      alert("Failed to delete account");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
 export async function handleCreateUser(
   e,
   name,
