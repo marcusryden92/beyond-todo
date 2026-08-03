@@ -6,6 +6,8 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const cors = require("cors");
 const passport = require("passport");
+const pgSession = require("connect-pg-simple")(session);
+const pool = require("./db");
 
 function setupRouting(app) {
   // APP USE
@@ -40,6 +42,12 @@ function setupRouting(app) {
   const isProd = process.env.NODE_ENV === "production";
   app.use(
     session({
+      // Persist sessions in Postgres (Neon) so a Render restart or spin-down
+      // doesn't log everyone out — the default MemoryStore lives only in RAM.
+      store: new pgSession({
+        pool,
+        createTableIfMissing: true, // auto-creates the "session" table on first use
+      }),
       secret: process.env.SESSION_SECRET || "dev-secret-change-me",
       resave: false,
       saveUninitialized: false,
